@@ -14,6 +14,5 @@ else
         echo 'Removing...'
         git branch --merged | egrep -v "(^\*|master|beta|dev)"  | xargs git branch -d
         echo "Done!"
-        exit 1
     fi
 fi
