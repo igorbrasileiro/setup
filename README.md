@@ -15,3 +15,14 @@ after run this close the terminal and open a new one.
 
 #### Bash alias for Git:
 - gitfep = git fetch and git pull
+
+### Remove merged branches script
+```shell
+$ ~/remove_merged_branchs.sh
+These branches have been merged:
+ ... # branch names here
+Are you sure? y
+Removing...
+Deleted branch ... # branch name here
+Done!
+```
