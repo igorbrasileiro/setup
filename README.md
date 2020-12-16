@@ -26,3 +26,10 @@ Removing...
 Deleted branch ... # branch name here
 Done!
 ```
+
+### Install vscode extensions
+Run
+```sh
+$ chmod +x ./install_vscode_extensions.sh
+$ ./install_vscode_extensions.sh
+```

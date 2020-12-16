@@ -1,4 +1,4 @@
-!#/bin/bash
+#!/bin/bash
 
 # Install brew
 
@@ -23,7 +23,8 @@ git clone https://github.com/bhilburn/powerlevel9k.git ~/.oh-my-zsh/custom/theme
 
 # open download vscode
 
-open https://code.visualstudio.com/docs/?dv=osxa
+open https://code.visualstudio.com/docs/?dv=osx
+
 
 # Instal nvm
 
