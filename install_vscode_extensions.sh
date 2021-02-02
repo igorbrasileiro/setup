@@ -7,3 +7,5 @@ code --install-extension usernamehw.errorlens
 code --install-extension vscode-icons-team.vscode-icons
 code --install-extension waderyan.gitblame
 code --install-extension ngryman.codesandbox-theme
+code --install-extension CoenraadS.bracket-pair-colorizer
+code --install-extension GitHub.github-vscode-theme
