@@ -1,6 +1,6 @@
 #!/bin/bash
 
-branches=`git branch --merged | egrep -v "(^\*|master|beta|dev)"`
+branches=`git branch --merged | egrep -v "(^\*|master|beta|main)"`
 if [[ branches -eq "" ]]
 then
     echo "You don't have merged branches"
@@ -13,7 +13,7 @@ else
     if [[ "$response" =~ ^(Y)*$ || "$response" =~ ^([yY][eE][sS]|[yY])$ ]]
     then
         echo "Removing..."
-        git branch --merged | egrep -v "(^\*|master|beta|dev)"  | xargs git branch -d
+        git branch --merged | egrep -v "(^\*|master|beta|main)"  | xargs git branch -d
         echo "Done!"
     fi
 fi
