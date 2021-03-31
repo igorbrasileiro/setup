@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Copy .vimrc to home/user
+cp .vimrc ~/
+
 # Install brew
 
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
