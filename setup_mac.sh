@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# Copy .vimrc to home/user
-./setup_vim.sh
-
 # Install brew
 
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
@@ -44,3 +41,7 @@ curl -o- -L https://yarnpkg.com/install.sh | bash
 # Instructions
 - Install vscode
 -- Open cmd+P > shell command install
+
+# Copy .vimrc to home/user
+./setup_vim.sh
+
