@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Copy .vimrc to home/user
-cp .vimrc ~/
+./setup_vim.sh
 
 # Install brew
 
