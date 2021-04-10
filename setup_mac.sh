@@ -4,22 +4,12 @@
 
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
 
-# brew install git
+# installing git
 
 brew install git
 
-# Install oh my zsh
-
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
-
-# Install powerline font
-git clone https://github.com/powerline/fonts.git
-cd font
-/bin/bash ./install.sh
-cd ..
-
-# Clone powerlevel theme
-git clone https://github.com/bhilburn/powerlevel9k.git ~/.oh-my-zsh/custom/themes/powerlevel9k
+# installing and setting up Oh My Zsh
+./setup_zsh.sh
 
 # open download vscode
 
@@ -30,7 +20,7 @@ open https://code.visualstudio.com/docs/?dv=osx
 
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.37.0/install.sh | bash
 
-nvm install v12
+nvm install latest
 
 # Install yarn
 
