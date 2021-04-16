@@ -12,6 +12,13 @@ ZSH_THEME="powerlevel9k/powerlevel9k"
 # Settings to change the terminal line
 POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(dir rbenv vcs)
 POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status root_indicator background_jobs history time)
+POWERLEVEL9K_SHORTEN_DIR_LENGTH=1
+POWERLEVEL9K_SHORTEN_STRATEGY="truncate_from_right"
+POWERLEVEL9K_DIR_HOME_SUBFOLDER_BACKGROUND="white"
+POWERLEVEL9K_VI_MODE_INSERT_FOREGROUND='teal'
+POWERLEVEL9K_PROMPT_ADD_NEWLINE=true
+POWERLEVEL9K_PROMPT_ON_NEWLINE=true
+set_default POWERLEVEL9K_CONTEXT_TEMPLATE "%n"
 
 # Set list of themes to pick from when loading at random
 # Setting this variable when ZSH_THEME=random will cause zsh to load
@@ -110,3 +117,14 @@ export NVM_DIR="$HOME/.nvm"
 
 export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
 source ~/.bash_aliases
+
+# Plugins
+source ~/.zplug/init.zsh
+
+zplug "b4b4r07/enhancd", use:init.sh
+zplug "junegunn/fzf", use:"shell/*.zsh"
+
+zplug load
+
+ENHANCD_FILTER=fzf
+export ENHANCD_FILTER
