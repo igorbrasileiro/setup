@@ -116,16 +116,17 @@ export NVM_DIR="$HOME/.nvm"
 export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
 source ~/.bash_aliases
 
-
-ENHANCD_FILTER=fzf
-export ENHANCD_FILTER
 # Plugins
 source ~/.zplug/init.zsh
 
-zplug "junegunn/fzf", use:"shell/*.zsh"
 zplug "b4b4r07/enhancd", use:init.sh
+zplug "junegunn/fzf", use:"shell/*.zsh"
+zplug "zsh-users/zsh-syntax-highlighting", defer:2
 
 zplug load
+
+ENHANCD_FILTER=fzf
+export ENHANCD_FILTER
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
