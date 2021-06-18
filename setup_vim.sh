@@ -13,3 +13,7 @@ vim -c PlugInstall
 # add fzf to GFiles work
 brew install fzf
 brew install the_silver_searcher
+brew install neovim
+
+mkdir ~/.config/nvim/
+cp init.vim ~/.config/nvim/init.vim
