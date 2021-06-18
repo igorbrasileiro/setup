@@ -12,4 +12,4 @@ vim -c PlugInstall
 
 # add fzf to GFiles work
 brew install fzf
-bew install the_silver_searcher
+brew install the_silver_searcher

@@ -19,5 +19,5 @@ echo "installing zsh- autosuggestion"
 git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
 
 # Copy .zshrc
-cp ./.zshrc ~/.zshrc
+cp .zshrc ~/.zshrc
 cp .p10k.zsh ~/.p10k.zsh
