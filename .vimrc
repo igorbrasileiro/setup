@@ -24,8 +24,9 @@ Plug 'jiangmiao/auto-pairs'
 Plug 'lucasecdb/vim-codedark'
 Plug 'altercation/vim-colors-solarized'
 Plug 'vim-airline/vim-airline'
-Plug 'kaicataldo/material.vim'
-Plug 'udalov/kotlin-vim'
+" Plug 'kaicataldo/material.vim'
+Plug 'dracula/vim', { 'as': 'dracula' }
+" Plug 'udalov/kotlin-vim'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'jparise/vim-graphql'
 Plug 'chrisbra/vim-commentary'
@@ -239,21 +240,22 @@ endif
 """}}}1
 """ Section: Visual {{{1
 
-if has('syntax')
-  if !has('syntax_on') && !exists('syntax_manual')
-    syntax on
-  endif
+" if has('syntax')
+" if !has('syntax_on') && !exists('syntax_manual')
+" syntax on
+" endif
 
-  if has('gui')
-    set linespace=3
-    set guioptions-=r
-    set guioptions-=L
-  endif
+" if has('gui')
+" set linespace=3
+" set guioptions-=r
+" set guioptions-=L
+" endif
 
-  set termguicolors
-  let g:material_theme_style = 'ocean'
-  colorscheme material
-  let g:lightline = { 'colorscheme': 'material_vim' }
-endif
+" set termguicolors
+" let g:material_theme_style = 'ocean'
+" colorscheme material
+" let g:lightline = { 'colorscheme': 'material_vim' }
+" endif
 
+colorscheme dracula
 """}}}1
