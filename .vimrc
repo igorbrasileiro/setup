@@ -133,8 +133,8 @@ nnoremap <silent> <leader>et :CocCommand tslint.fixAllProblems<cr>
 """}}}2
 
 " Fugitive
-nnoremap <silent> <leader>c :Gcommit<cr>
-nnoremap <silent> <leader>s :Gstatus<cr>
+nnoremap <silent> <leader>c :Git commit<cr>
+nnoremap <silent> <leader>s :Git<cr>
 
 nnoremap <leader>r :arg 
 cnoremap <leader>r :arg 
