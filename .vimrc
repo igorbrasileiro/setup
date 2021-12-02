@@ -24,10 +24,13 @@ Plug 'jiangmiao/auto-pairs'
 Plug 'lucasecdb/vim-codedark'
 Plug 'altercation/vim-colors-solarized'
 Plug 'vim-airline/vim-airline'
+" Begin themes
 " Plug 'kaicataldo/material.vim'
 Plug 'dracula/vim', { 'as': 'dracula' }
+Plug 'projekt0n/github-nvim-theme'
 " Plug 'udalov/kotlin-vim'
 Plug 'vim-airline/vim-airline-themes'
+" End themes
 Plug 'jparise/vim-graphql'
 Plug 'chrisbra/vim-commentary'
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
@@ -257,5 +260,5 @@ endif
 " let g:lightline = { 'colorscheme': 'material_vim' }
 " endif
 
-colorscheme dracula
+colorscheme github_dimmed
 """}}}1
