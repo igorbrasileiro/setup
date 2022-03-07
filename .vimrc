@@ -11,6 +11,16 @@ let g:coc_global_extensions = [
   \'coc-go'
   \]
 
+" Rust
+let g:rustfmt_autosave = 1
+let g:ale_completion_enabled = 1
+let g:ale_linters = {
+\  'rust': ['analyzer'],
+\}
+
+autocmd BufNewFile,BufRead *.rs set filetype=rust
+" End rust
+
 """ Section: Packages {{{1
 
 call plug#begin('~/.vim/plugged')
@@ -30,11 +40,14 @@ Plug 'dracula/vim', { 'as': 'dracula' }
 Plug 'projekt0n/github-nvim-theme'
 " Plug 'udalov/kotlin-vim'
 Plug 'vim-airline/vim-airline-themes'
+Plug 'preservim/nerdtree'
 " End themes
 Plug 'jparise/vim-graphql'
 Plug 'chrisbra/vim-commentary'
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
+Plug 'rust-lang/rust.vim'
+Plug 'dense-analysis/ale'
 
 " Javascript
 Plug 'pangloss/vim-javascript'
@@ -69,6 +82,9 @@ set mouse=a
 set rtp+=/usr/local/opt/fzf
 set rtp+=~/.fzf
 set completeopt+=noinsert
+" Rust
+set completeopt+=menu,menuone,preview,noselect,noinsert
+" End rust
 set nohls
 set ignorecase
 set updatetime=300
@@ -167,6 +183,16 @@ command! WQ wq
 command! Wq wq
 command! W w
 command! Q q
+
+" NERDTree
+nnoremap <leader>n :NERDTreeFocus<CR>
+nnoremap <C-n> :NERDTree<CR>
+nnoremap <C-t> :NERDTreeToggle<CR>
+nnoremap <C-f> :NERDTreeFind<CR>
+
+" RUST
+nnoremap <leader>gd :ALEGoToDefinition<CR>
+
 
 """ }}}1
 """ Section: Plugins options {{{1
