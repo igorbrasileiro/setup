@@ -1,2 +1,6 @@
 alias gitfep='git fetch && git pull origin $(git branch --show-current)'
-alias flink='yarn link @vtex/gatsby-theme-store @vtex/gatsby-plugin-i18n @vtex/store-ui'
+
+faststore_link() {
+  rm -rf "./node_modules/@faststore/$1" && cp -r "$HOME/dev/vtex/faststore/packages/$1" "./node_modules/@faststore/";
+}
+alias flink=faststore_link
