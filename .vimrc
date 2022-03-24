@@ -46,8 +46,9 @@ Plug 'jparise/vim-graphql'
 Plug 'chrisbra/vim-commentary'
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
+
+" Rust
 Plug 'rust-lang/rust.vim'
-Plug 'dense-analysis/ale'
 
 " Javascript
 Plug 'pangloss/vim-javascript'
