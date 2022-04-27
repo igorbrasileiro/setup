@@ -10,6 +10,12 @@ let g:coc_global_extensions = [
   \'coc-go'
   \]
 
+" Disable python, ruby and perl providers
+" Run :checkhealth provider
+let g:python3_host_prog = '/usr/local/bin/python'
+let g:loaded_ruby_provider = 0
+let g:loaded_perl_provider = 0
+
 " Rust
 let g:rustfmt_autosave = 1
 let g:ale_completion_enabled = 1

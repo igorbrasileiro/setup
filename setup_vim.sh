@@ -25,10 +25,22 @@ brew install fzf
 brew install the_silver_searcher
 brew install neovim
 
+# Install python3
+brew install python@3.10
+
+# creating symbolic link for python using brew
+echo -e "${GREEN}Creating symbolic link for python@3.10...${NC}"
+echo -e "ln -s -f /usr/local/opt/python@3.10/bin/python3 /usr/local/bin/python"
+ln -s -f /usr/local/opt/python@3.10/bin/python3 /usr/local/bin/python
+echo "Symbolic link created, restart your terminal"
+
 # Copying vim settings to nvim
 echo -e "${GREEN}Copying init.vim setup to neovim...${NC}"
 mkdir ~/.config/nvim/
 cp init.vim ~/.config/nvim/init.vim
+
+# install neovim for nodejs
+yarn global add neovim
 
 ## install rust-analyzer
 
