@@ -33,3 +33,5 @@ Run
 $ chmod +x ./install_vscode_extensions.sh
 $ ./install_vscode_extensions.sh
 ```
+
+https://pastebin.com/WrbsAGeH

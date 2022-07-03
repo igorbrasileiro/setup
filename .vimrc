@@ -7,7 +7,7 @@ let g:coc_global_extensions = [
   \'coc-json',
   \'coc-texlab',
   \'coc-vimtex',
-  \'coc-go'
+  \'coc-rust-analyzer'
   \]
 
 " Disable python, ruby and perl providers
@@ -33,6 +33,7 @@ call plug#begin('~/.vim/plugged')
 Plug 'neoclide/coc.nvim', { 'do': 'yarn install --frozen-lockfile' }
 Plug 'neoclide/jsonc.vim'
 Plug 'tpope/vim-surround'
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'tpope/vim-fugitive'
 Plug 'jiangmiao/auto-pairs'

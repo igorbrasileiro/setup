@@ -8,7 +8,7 @@ git config --global alias.sw 'switch'
 git config --global alias.g "log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
 
 echo 'CRIANDO ~/.bash_aliases'
-cp ./bash_aliases ~/.bash_aliases
+cp ./.bash_aliases ~/.bash_aliases
 echo 'Adding bash_aliases to ~/.zshrc'
 echo "source ~/.bash_aliases" >> ~/.zshrc
 
