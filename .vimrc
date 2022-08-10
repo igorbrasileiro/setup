@@ -197,9 +197,10 @@ nnoremap <C-n> :NERDTree<CR>
 nnoremap <C-t> :NERDTreeToggle<CR>
 nnoremap <C-f> :NERDTreeFind<CR>
 
-" RUST
-nnoremap <leader>gd :ALEGoToDefinition<CR>
+" Deno
+command DFmt :silent !deno fmt %
 
+nnoremap <leader>df :DFmt<cr>
 
 """ }}}1
 """ Section: Plugins options {{{1
