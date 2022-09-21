@@ -30,7 +30,7 @@ autocmd BufNewFile,BufRead *.rs set filetype=rust
 
 call plug#begin('~/.vim/plugged')
 
-Plug 'neoclide/coc.nvim', { 'do': 'yarn install --frozen-lockfile' }
+Plug 'neoclide/coc.nvim', { 'do': 'yarn install --frozen-lockfile', 'tag': 'v0.0.81' }
 Plug 'neoclide/jsonc.vim'
 Plug 'tpope/vim-surround'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
