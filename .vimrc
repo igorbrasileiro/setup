@@ -1,13 +1,14 @@
 " vim: set foldmethod=marker foldlevel=0:
 
 let g:coc_global_extensions = [
-  \'coc-tsserver',
+  \'coc-tsserver@1.10.5',
   \'coc-eslint',
   \'coc-css',
   \'coc-json',
   \'coc-texlab',
   \'coc-vimtex',
-  \'coc-rust-analyzer'
+  \'coc-rust-analyzer',
+  \'coc-deno',
   \]
 
 " Disable python, ruby and perl providers
