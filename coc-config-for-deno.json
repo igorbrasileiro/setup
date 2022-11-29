@@ -8,5 +8,8 @@
     "javascript",
     "typescriptreact",
     "javascriptreact"
-  ]
+  ],
+  "tailwindCSS.enable": true,
+  "tailwindCSS.lint.cssConflict": "error",
+  "tailwindCSS.headwind.runOnSave": true
 }

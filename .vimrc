@@ -1,14 +1,14 @@
 " vim: set foldmethod=marker foldlevel=0:
 
 let g:coc_global_extensions = [
-  \'coc-tsserver@1.10.5',
+  \'coc-tsserver',
   \'coc-eslint',
   \'coc-css',
   \'coc-json',
   \'coc-texlab',
   \'coc-vimtex',
   \'coc-rust-analyzer',
-  \'coc-deno',
+  \'@yaegassy/coc-tailwindcss3'
   \]
 
 " Disable python, ruby and perl providers
@@ -31,7 +31,7 @@ autocmd BufNewFile,BufRead *.rs set filetype=rust
 
 call plug#begin('~/.vim/plugged')
 
-Plug 'neoclide/coc.nvim', { 'do': 'yarn install --frozen-lockfile', 'tag': 'v0.0.81' }
+Plug 'neoclide/coc.nvim', { 'do': 'yarn install', 'branch': 'release' }
 Plug 'neoclide/jsonc.vim'
 Plug 'tpope/vim-surround'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
@@ -89,9 +89,10 @@ set cursorline
 set mouse=a
 set rtp+=/usr/local/opt/fzf
 set rtp+=~/.fzf
-set completeopt+=noinsert
+" set completeopt+=noinsert
 " Rust
-set completeopt+=menu,menuone,preview,noselect,noinsert
+" set completeopt+=menu,menuone,preview,noselect,noinsert
+set completeopt+=menu,menuone,preview,noselect
 " End rust
 set nohls
 set ignorecase
@@ -151,8 +152,28 @@ function! s:show_documentation()
   endif
 endfunction
 
+" Make <CR> to accept selected completion item or notify coc.nvim to format
+" <C-g>u breaks current undo, please make your own choice.
+inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm()
+                              \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+
+inoremap <silent><expr> <TAB>
+      \ coc#pum#visible() ? coc#pum#next(1):
+      \ <SID>check_back_space() ? "\<Tab>" :
+      \ coc#refresh()
+
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
+inoremap <expr><S-TAB> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
+
 " Use <c-space> to trigger completion.
 inoremap <silent><expr> <c-space> coc#refresh()
+
+hi CocSearch ctermfg=12 guifg=#18A3FF
+hi CocMenuSel ctermbg=109 guibg=#13354A
 
 nnoremap <silent> <leader>ee :CocCommand eslint.executeAutofix<cr>
 nnoremap <silent> <leader>et :CocCommand tslint.fixAllProblems<cr>
