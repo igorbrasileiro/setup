@@ -8,7 +8,8 @@ let g:coc_global_extensions = [
   \'coc-texlab',
   \'coc-vimtex',
   \'coc-rust-analyzer',
-  \'@yaegassy/coc-tailwindcss3'
+  \'@yaegassy/coc-tailwindcss3',
+  \'coc-deno',
   \]
 
 " Disable python, ruby and perl providers
