@@ -14,7 +14,7 @@ let g:coc_global_extensions = [
 
 " Disable python, ruby and perl providers
 " Run :checkhealth provider
-let g:python3_host_prog = '/usr/local/bin/python'
+let g:python3_host_prog = '/usr/bin/python3'
 let g:loaded_ruby_provider = 0
 let g:loaded_perl_provider = 0
 
@@ -53,7 +53,7 @@ Plug 'preservim/nerdtree'
 Plug 'jparise/vim-graphql'
 Plug 'chrisbra/vim-commentary'
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
+" Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
 
 " Rust
 Plug 'rust-lang/rust.vim'
