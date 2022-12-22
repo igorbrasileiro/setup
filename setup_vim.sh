@@ -37,12 +37,20 @@ echo "Symbolic link created, restart your terminal"
 # Copying vim settings to nvim
 echo -e "${GREEN}Copying init.vim setup to neovim...${NC}"
 mkdir ~/.config/nvim/
-cp init.vim ~/.config/nvim/init.vim
+# cp init.vim ~/.config/nvim/init.vim
+cp init.lua ~/.config/nvim/init.lua
 
 # install neovim for nodejs
 yarn global add neovim
 
 ## install rust-analyzer
 
-echo -e "${GREEN}Instaling coc-rust-analyizer...${NC}"
-nvim --cmd "CocInstall coc-rust-analyzer"
+# If using coc
+# echo -e "${GREEN}Instaling coc-rust-analyizer...${NC}"
+# nvim --cmd "CocInstall coc-rust-analyzer"
+
+# brew install ripgrep
+sudo apt-get install ripgrep
+
+# Install tree-sitter-cli
+# cargo install tree-sitter-cli

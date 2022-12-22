@@ -98,6 +98,7 @@ vim.o.hlsearch = false
 
 -- Make line numbers default
 vim.wo.number = true
+vim.wo.relativenumber = true
 
 -- Enable mouse mode
 vim.o.mouse = 'a'
@@ -123,6 +124,10 @@ vim.cmd [[colorscheme onedark]]
 -- Set completeopt to have a better completion experience
 vim.o.completeopt = 'menuone,noselect'
 
+-- Split pannel settings
+vim.o.splitbelow = true
+vim.o.splitright = true
+
 -- [[ Basic Keymaps ]]
 -- Set <space> as the leader key
 -- See `:help mapleader`
@@ -137,6 +142,9 @@ vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
 -- Remap for dealing with word wrap
 vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
 vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
+
+-- Git setting
+vim.keymap.set('n', '<leader>s', '<cmd>Git<cr>', { silent = true })
 
 -- [[ Highlight on yank ]]
 -- See `:help vim.highlight.on_yank()`
@@ -219,7 +227,7 @@ vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { de
 -- See `:help nvim-treesitter`
 require('nvim-treesitter.configs').setup {
   -- Add languages to be installed here that you want installed for treesitter
-  ensure_installed = { 'python', 'rust', 'help' },
+  ensure_installed = { 'python', 'rust', 'lua', 'help' },
 
   highlight = { enable = true },
   indent = { enable = true },
