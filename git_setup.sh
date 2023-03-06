@@ -6,6 +6,9 @@ git config --global core.editor nvim
 git config --global alias.l1 'log --oneline'
 git config --global alias.sw 'switch'
 git config --global alias.lg "log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' --all"
+gpg.format=ssh
+commit.gpgsign=true
+gpg.ssh.allowedsignersfile=/Users/igorbrasileiro/.ssh/allowed_signers
 
 # Follow this steps to sign commits
 # https://calebhearth.com/sign-git-with-ssh
