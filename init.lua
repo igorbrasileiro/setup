@@ -340,9 +340,11 @@ local on_attach = function(_, bufnr)
     end
   end, { desc = 'Format current buffer with LSP' })
 
-  -- vim.api.nvim_create_autocmd("BufWritePre", {
-  --   command = [[Format]]
-  -- })
+  vim.api.nvim_create_autocmd("BufWritePost", {
+    callback = function()
+      vim.lsp.buf.format()
+    end
+  })
 end
 
 -- Format
