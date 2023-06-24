@@ -104,6 +104,9 @@ require('lazy').setup({
 
       -- Adds a number of user-friendly snippets
       'rafamadriz/friendly-snippets',
+
+      -- Buffer Autocompletion
+      'hrsh7th/cmp-buffer'
     },
   },
 
@@ -244,6 +247,10 @@ vim.o.timeoutlen = 300
 
 -- Set completeopt to have a better completion experience
 vim.o.completeopt = 'menuone,noselect'
+
+-- Split pannel settings
+vim.o.splitbelow = true
+vim.o.splitright = true
 
 -- NOTE: You should make sure your terminal supports this
 vim.o.termguicolors = true
@@ -440,6 +447,7 @@ local servers = {
   -- tsserver = {},
 
   denols = {},
+  tailwindcss = {},
 
   lua_ls = {
     Lua = {
@@ -450,24 +458,9 @@ local servers = {
 }
 
 -- deno lsp config
--- vim.g.markdown_fenced_languages = {
---   "ts=typescript"
--- }
--- local lspconfig = require('lspconfig')
--- local _capabilities = require('cmp_nvim_lsp').default_capabilities()
--- lspconfig["denols"].setup({
---   on_attach = on_attach,
---   capabilities = _capabilities,
---   root_dir = lspconfig.util.root_pattern("deno.json", "deno.jsonc", "deno.tag"),
---   init_options = {
---     settings = {
---       deno = {
---         enable = true,
---         unstable = false,
---       }
---     }
---   }
--- })
+vim.g.markdown_fenced_languages = {
+  "ts=typescript"
+}
 
 -- Setup neovim lua configuration
 require('neodev').setup()
@@ -492,6 +485,7 @@ mason_lspconfig.setup_handlers {
     }
   end,
 }
+
 
 -- [[ Configure nvim-cmp ]]
 -- See `:help cmp`
@@ -538,6 +532,7 @@ cmp.setup {
   sources = {
     { name = 'nvim_lsp' },
     { name = 'luasnip' },
+    { name = 'buffer' },
   },
 }
 
