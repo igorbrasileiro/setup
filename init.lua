@@ -103,7 +103,7 @@ require('lazy').setup({
       'hrsh7th/cmp-nvim-lsp',
 
       -- Adds a number of user-friendly snippets
-      'rafamadriz/friendly-snippets',
+      -- 'rafamadriz/friendly-snippets',
 
       -- Buffer Autocompletion
       'hrsh7th/cmp-buffer'
@@ -429,7 +429,7 @@ local on_attach = function(_, bufnr)
   -- Format on save
   vim.api.nvim_create_autocmd("BufWritePre", {
     callback = function()
-      vim.lsp.buf.format { async = false }
+      vim.lsp.buf.format { async = false, options = { timeout_ms = 1000 } }
     end
   })
 end
@@ -447,6 +447,7 @@ local servers = {
   -- tsserver = {},
 
   denols = {},
+
   tailwindcss = {},
 
   lua_ls = {
@@ -485,7 +486,6 @@ mason_lspconfig.setup_handlers {
     }
   end,
 }
-
 
 -- [[ Configure nvim-cmp ]]
 -- See `:help cmp`
