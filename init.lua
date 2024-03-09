@@ -161,10 +161,8 @@ require('lazy').setup({
     'lukas-reineke/indent-blankline.nvim',
     -- Enable `lukas-reineke/indent-blankline.nvim`
     -- See `:help indent_blankline.txt`
-    opts = {
-      char = '┊',
-      show_trailing_blankline_indent = false,
-    },
+    opts = {},
+    main = "ibl"
   },
 
   -- "gc" to comment visual regions/lines
@@ -207,6 +205,19 @@ require('lazy').setup({
   --
   --    For additional information see: https://github.com/folke/lazy.nvim#-structuring-your-plugins
   { import = 'custom.plugins' },
+
+  -- tree file
+  {
+    "nvim-tree/nvim-tree.lua",
+    version = "*",
+    lazy = false,
+    dependencies = {
+      "nvim-tree/nvim-web-devicons",
+    },
+    config = function()
+      require("nvim-tree").setup {}
+    end,
+  }
 }, {})
 
 -- [[ Setting options ]]
@@ -446,8 +457,6 @@ local servers = {
   -- rust_analyzer = {},
   -- tsserver = {},
 
-  denols = {},
-
   tailwindcss = {},
 
   lua_ls = {
@@ -485,6 +494,12 @@ mason_lspconfig.setup_handlers {
       settings = servers[server_name],
     }
   end,
+}
+
+require('lspconfig').denols.setup {
+  capabilities = capabilities,
+  on_attach = on_attach,
+  cmd = { "/Users/igorbrasileiro/.deno/bin/deno", "lsp" }
 }
 
 -- [[ Configure nvim-cmp ]]
@@ -535,6 +550,10 @@ cmp.setup {
     { name = 'buffer' },
   },
 }
+
+require('ibl').setup({
+  indent = { char = "|" },
+})
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
