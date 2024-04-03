@@ -7,7 +7,7 @@
 Kickstart.nvim is *not* a distribution.
 
 Kickstart.nvim is a template for your own configuration.
-  The goal is that you can read every line of code, top-to-bottom, understand
+  goal is that you can read every line of code, top-to-bottom, understand
   what your configuration is doing, and modify it to suit your needs.
 
   Once you've done that, you should start exploring, configuring and tinkering to
@@ -207,17 +207,17 @@ require('lazy').setup({
   { import = 'custom.plugins' },
 
   -- tree file
-  {
-    "nvim-tree/nvim-tree.lua",
-    version = "*",
-    lazy = false,
-    dependencies = {
-      "nvim-tree/nvim-web-devicons",
-    },
-    config = function()
-      require("nvim-tree").setup {}
-    end,
-  }
+  -- {
+  --   "nvim-tree/nvim-tree.lua",
+  --   version = "*",
+  --   lazy = false,
+  --   dependencies = {
+  --     "nvim-tree/nvim-web-devicons",
+  --   },
+  --   config = function()
+  --     require("nvim-tree").setup {}
+  --   end,
+  -- }
 }, {})
 
 -- [[ Setting options ]]
@@ -499,8 +499,16 @@ mason_lspconfig.setup_handlers {
 require('lspconfig').denols.setup {
   capabilities = capabilities,
   on_attach = on_attach,
-  cmd = { "/Users/igorbrasileiro/.deno/bin/deno", "lsp" }
+  cmd = { "/Users/igorbrasileiro/.deno/bin/deno", "lsp" },
 }
+
+-- Deno setup
+-- require("deno-nvim").setup({
+--   server = {
+--     on_attach = on_attach,
+--     capabilites = capabilities,
+--   },
+-- })
 
 -- [[ Configure nvim-cmp ]]
 -- See `:help cmp`
