@@ -229,15 +229,34 @@ require('lazy').setup({
     opts = {
       -- add any opts here
       -- for example
-      auto_suggestions_provider = "claude",
+      provider = "claude",
+      cursor_applying_provider = 'groq', -- In this example, use Groq for applying, but you can also use any provider you want.
+      behaviour = {
+        --- ... existing behaviours
+        enable_cursor_planning_mode = true, -- enable cursor planning mode!
+      },
       claude = {
         endpoint = "https://api.anthropic.com",
         model = "claude-3-7-sonnet-20250219",
         temperature = 0,
         max_tokens = 4096,
       },
+      rag_service = {
+        enabled = true,                         -- Enables the RAG service
+        host_mount = os.getenv("HOME"),         -- Host mount path for the rag service
+        provider = "openai",                    -- The provider to use for RAG service (e.g. openai or ollama)
+        llm_model = "4o-mini",                  -- The LLM model to use for RAG service
+        embed_model = "text-embedding-ada-002", -- The embedding model to use for RAG service
+      },
       -- provider = "deepseek",
       vendors = {
+        groq = { -- define groq provider
+          __inherited_from = 'openai',
+          api_key_name = 'GROQ_API_KEY',
+          endpoint = 'https://api.groq.com/openai/v1/',
+          model = 'llama-3.3-70b-versatile',
+          max_tokens = 32768, -- remember to increase this value, otherwise it will stop generating halfway
+        },
         deepseek = {
           __inherited_from = "openai",
           api_key_name = "DEEPSEEK_API_KEY",
