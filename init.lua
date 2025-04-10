@@ -41,6 +41,17 @@ P.S. You can delete this when you're done too. It's your config now :)
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
+local function get_git_root()
+  local handle = io.popen "git rev-parse --show-toplevel 2> /dev/null"
+  if handle then
+    local result = handle:read "*l"
+    handle:close()
+    return result
+  end
+  return nil
+end
+local workspace_path = get_git_root() or vim.fn.getcwd()
+
 -- Install package manager
 --    https://github.com/folke/lazy.nvim
 --    `:help lazy.nvim.txt` for more info
@@ -230,33 +241,41 @@ require('lazy').setup({
       -- add any opts here
       -- for example
       provider = "claude",
-      cursor_applying_provider = 'groq', -- In this example, use Groq for applying, but you can also use any provider you want.
+      cursor_applying_provider = 'gemini', -- In this example, use Groq for applying, but you can also use any provider you want.
       behaviour = {
         --- ... existing behaviours
         enable_cursor_planning_mode = true, -- enable cursor planning mode!
         enable_claude_text_editor_tool_mode = true
+        -- minimize_diff = true,               -- Whether to remove unchanged lines when applying a code block
       },
       claude = {
         endpoint = "https://api.anthropic.com",
         model = "claude-3-7-sonnet-20250219",
         temperature = 0,
-        max_tokens = 4096,
+        max_tokens = 4086,
+      },
+      gemini = {
+        model = "gemini-2.5-pro-exp-03-25",
+        max_tokens = 65536,
       },
       rag_service = {
-        enabled = true,                         -- Enables the RAG service
-        host_mount = os.getenv("HOME"),         -- Host mount path for the rag service
-        provider = "openai",                    -- The provider to use for RAG service (e.g. openai or ollama)
-        llm_model = "4o-mini",                  -- The LLM model to use for RAG service
-        embed_model = "text-embedding-ada-002", -- The embedding model to use for RAG service
+        enabled = true,              -- Set to true to enable it
+        host_mount = workspace_path, -- Or adjust path as needed (e.g., "/")
+        provider = "openai",         -- CHOOSE EITHER "openai" OR "ollama" HERE
+        -- For OpenAI:
+        endpoint = "https://api.openai.com/v1",
+        llm_model = "",                         -- Optional: specify a model for RAG tasks if needed
+        embed_model = "text-embedding-3-small", -- Optional: specify an embedding model
       },
-      -- provider = "deepseek",
       vendors = {
         groq = { -- define groq provider
           __inherited_from = 'openai',
           api_key_name = 'GROQ_API_KEY',
           endpoint = 'https://api.groq.com/openai/v1/',
           model = 'llama-3.3-70b-versatile',
-          max_tokens = 32768, -- remember to increase this value, otherwise it will stop generating halfway
+          max_tokens = 32768,            -- remember to increase this value, otherwise it will stop generating halfway
+          max_completion_tokens = 32768, -- i don't know if it works, just saw in some gh issue
+          -- max_tokens = 6000, -- remember to increase this value, otherwise it will stop generating halfway
         },
         deepseek = {
           __inherited_from = "openai",
@@ -281,6 +300,23 @@ require('lazy').setup({
         return {}
       end,
     },
+
+    -- disabled because using MCH HUB
+    -- disabled_tools = {
+    --   "list_files",
+    --   "search_files",
+    --   "read_file",
+    --   "create_file",
+    --   "rename_file",
+    --   "delete_file",
+    --   "create_dir",
+    --   "rename_dir",
+    --   "delete_dir",
+    --   "bash",
+    --   "python",
+    --   "fetch",
+    --   "execute_lua",
+    -- },
 
     -- if you want to build from source then do `make BUILD_FROM_SOURCE=true`
     build = "make",
