@@ -1,0 +1,67 @@
+{
+  "mcpServers": {
+    "github.com/modelcontextprotocol/servers/tree/main/src/puppeteer": {
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-puppeteer"
+      ],
+      "disabled_tools": [
+        "puppeteer_screenshot",
+        "puppeteer_select",
+        "puppeteer_hover",
+        "puppeteer_fill",
+        "puppeteer_click"
+      ],
+      "command": "npx",
+      "disabled": false
+    },
+    "admin.deco.cx": {
+      "url": "admin.decocdn.com/mcp/sse",
+      "type": "sse",
+      "headers": {
+        "x-api-key": "<api-key>"
+      },
+      "disabled_tools": [
+        "GET_PAGE_FRESH_STATE_SIZE",
+        "DAEMON_PATCH_FILE",
+        "DAEMON_READ_FILE",
+        "DAEMON_LIST_FILES"
+      ],
+      "disabled": false
+    },
+    "fetch": {
+      "args": [
+        "mcp-server-fetch"
+      ],
+      "disabled_tools": [
+        
+      ],
+      "command": "uvx",
+      "disabled": false
+    },
+    "admin.deco": {
+      "args": [
+        "-y",
+        "supergateway",
+        "--sse",
+        "https://<<env>>--admin.deco.site/mcp/sse",
+        "--header",
+        "x-api-key: <api-key>"
+      ],
+      "disabled_tools": [
+        "DAEMON_PATCH_FILE",
+        "DAEMON_READ_FILE",
+        "DAEMON_LIST_FILES"
+      ],
+      "command": "npx",
+      "disabled": true
+    }
+  },
+  "nativeMCPServers": {
+    "neovim": {
+      "disabled_prompts": [
+        "parrot"
+      ]
+    }
+  }
+}
