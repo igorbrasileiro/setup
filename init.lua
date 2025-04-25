@@ -245,8 +245,8 @@ require('lazy').setup({
       behaviour = {
         --- ... existing behaviours
         enable_cursor_planning_mode = true, -- enable cursor planning mode!
-        enable_claude_text_editor_tool_mode = true
-        -- minimize_diff = true,               -- Whether to remove unchanged lines when applying a code block
+        enable_claude_text_editor_tool_mode = true,
+        minimize_diff = true,               -- Whether to remove unchanged lines when applying a code block
       },
       claude = {
         endpoint = "https://api.anthropic.com",
@@ -273,9 +273,9 @@ require('lazy').setup({
           api_key_name = 'GROQ_API_KEY',
           endpoint = 'https://api.groq.com/openai/v1/',
           model = 'llama-3.3-70b-versatile',
-          max_tokens = 32768,            -- remember to increase this value, otherwise it will stop generating halfway
-          max_completion_tokens = 32768, -- i don't know if it works, just saw in some gh issue
+          -- max_tokens = 32768, -- remember to increase this value, otherwise it will stop generating halfway
           -- max_tokens = 6000, -- remember to increase this value, otherwise it will stop generating halfway
+          max_completion_tokens = 32768
         },
         deepseek = {
           __inherited_from = "openai",
