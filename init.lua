@@ -666,6 +666,12 @@ require('lspconfig').denols.setup {
   capabilities = capabilities,
   on_attach = on_attach,
   cmd = { "/Users/igorbrasileiro/.deno/bin/deno", "lsp" },
+  settings = {
+    deno = {
+      config = vim.fn.filereadable(vim.fn.getcwd() .. "/deno.json") == 1 and "deno.json" or
+          (vim.fn.filereadable(vim.fn.getcwd() .. "/package.json") == 1 and "package.json" or "")
+    }
+  }
 }
 
 -- Deno setup
