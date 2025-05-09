@@ -52,6 +52,19 @@ local function get_git_root()
 end
 local workspace_path = get_git_root() or vim.fn.getcwd()
 
+-- Augment workspace folders
+-- vim.g.augment_workspace_folders = { workspace_path }
+
+-- Send a chat message in normal and visual mode
+-- vim.keymap.set('n', '<leader>ac', ':Augment chat<CR>', { desc = 'Send chat message (normal)' })
+-- vim.keymap.set('v', '<leader>ac', ':Augment chat<CR>', { desc = 'Send chat message (visual)' })
+--
+-- -- Start a new chat conversation
+-- vim.keymap.set('n', '<leader>an', ':Augment chat-new<CR>', { desc = 'Start new chat' })
+--
+-- -- Toggle the chat panel visibility
+-- vim.keymap.set('n', '<leader>at', ':Augment chat-toggle<CR>', { desc = 'Toggle chat panel' })
+
 -- Install package manager
 --    https://github.com/folke/lazy.nvim
 --    `:help lazy.nvim.txt` for more info
@@ -364,6 +377,7 @@ require('lazy').setup({
   -- MCP HUB
   {
     "ravitemer/mcphub.nvim",
+    -- tag = "v4.6.1",
     dependencies = {
       "nvim-lua/plenary.nvim", -- Required for Job and HTTP requests
     },
@@ -384,6 +398,9 @@ require('lazy').setup({
       })
     end,
   }
+
+
+  -- { 'augmentcode/augment.vim' },
 }, {})
 
 -- [[ Setting options ]]
@@ -652,17 +669,9 @@ mason_lspconfig.setup {
   ensure_installed = vim.tbl_keys(servers),
 }
 
-mason_lspconfig.setup_handlers {
-  function(server_name)
-    require('lspconfig')[server_name].setup {
-      capabilities = capabilities,
-      on_attach = on_attach,
-      settings = servers[server_name],
-    }
-  end,
-}
-
+-- local lspconfig = require 'lspconfig'
 require('lspconfig').denols.setup {
+  -- root_pattern = lspconfig.util.root_pattern("deno.json", "deno.jsonc", "package.json"),
   capabilities = capabilities,
   on_attach = on_attach,
   cmd = { "/Users/igorbrasileiro/.deno/bin/deno", "lsp" },
