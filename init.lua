@@ -263,7 +263,7 @@ require('lazy').setup({
       },
       rag_service = {
         enabled = true,              -- Set to true to enable it
-        host_mount = "~/dev", -- Or adjust path as needed (e.g., "/")
+        host_mount = os.getenv("HOME") .. "/dev", -- Or adjust path as needed (e.g., "/")
         runner = "docker",
         -- For OpenAI:
         embed = { -- Embedding model configuration for RAG service
