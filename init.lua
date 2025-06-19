@@ -261,26 +261,39 @@ require('lazy').setup({
         enable_claude_text_editor_tool_mode = true,
         minimize_diff = true,               -- Whether to remove unchanged lines when applying a code block
       },
-      claude = {
-        endpoint = "https://api.anthropic.com",
-        model = "claude-3-7-sonnet-20250219",
-        temperature = 0,
-        max_tokens = 4086,
-      },
-      gemini = {
-        model = "gemini-2.5-pro-exp-03-25",
-        max_tokens = 65536,
-      },
       rag_service = {
         enabled = true,              -- Set to true to enable it
-        host_mount = workspace_path, -- Or adjust path as needed (e.g., "/")
-        provider = "openai",         -- CHOOSE EITHER "openai" OR "ollama" HERE
+        host_mount = "~/dev", -- Or adjust path as needed (e.g., "/")
+        runner = "docker",
         -- For OpenAI:
-        endpoint = "https://api.openai.com/v1",
-        llm_model = "",                         -- Optional: specify a model for RAG tasks if needed
-        embed_model = "text-embedding-3-small", -- Optional: specify an embedding model
+        embed = { -- Embedding model configuration for RAG service
+          provider = "openai", -- Embedding provider
+          endpoint = "https://api.openai.com/v1", -- Embedding API endpoint
+          api_key = "_OPENAI_API_KEY", -- Environment variable name for the embedding API key
+          model = "text-embedding-3-small", -- Embedding model name
+          extra = nil, -- Additional configuration options for the embedding model
+        },
+        llm = { -- Language Model (LLM) configuration for RAG service
+          provider = "openai", -- LLM provider
+          endpoint = "https://api.openai.com/v1", -- LLM API endpoint
+          api_key = "_OPENAI_API_KEY", -- Environment variable name for the LLM API key
+          model = "gpt-4o-mini", -- LLM model name
+          extra = nil, -- Additional configuration options for LLM
+        },
       },
-      vendors = {
+      providers = {
+        claude = {
+          endpoint = "https://api.anthropic.com",
+          model = "claude-sonnet-4-20250514",
+          extra_request_body = {
+            temperature = 0,
+            max_tokens = 32768,
+          }
+        },
+        gemini = {
+          model = "gemini-2.5-pro-exp-03-25",
+          max_tokens = 65536,
+        },
         groq = { -- define groq provider
           __inherited_from = 'openai',
           api_key_name = 'GROQ_API_KEY',
@@ -288,7 +301,9 @@ require('lazy').setup({
           model = 'llama-3.3-70b-versatile',
           -- max_tokens = 32768, -- remember to increase this value, otherwise it will stop generating halfway
           -- max_tokens = 6000, -- remember to increase this value, otherwise it will stop generating halfway
-          max_completion_tokens = 32768
+          extra_request_body = {
+            max_completion_tokens = 32768
+          }
         },
         deepseek = {
           __inherited_from = "openai",
@@ -296,7 +311,10 @@ require('lazy').setup({
           endpoint = "https://api.deepseek.com",
           model = "deepseek-ai/deepseek-r1",
         }
+
       },
+      vendors = {
+              },
 
       -- Improved MCPHub integration
       system_prompt = function()
