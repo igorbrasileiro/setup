@@ -11,6 +11,12 @@ return {
 			provider = "openrouter", -- Set the default provider to OpenRouter
 			mode = "agentic",
 			behaviour = {
+				auto_suggestions = true,
+				auto_suggestion_provider = "groq", -- Use Groq for faster auto-suggestions
+			},
+			suggestion = {
+				debounce = 300, -- Time in milliseconds
+				throttle = 300, -- Time in milliseconds
 			},
 			rag_service = {
 				enabled = false,  -- Set to true to enable it
