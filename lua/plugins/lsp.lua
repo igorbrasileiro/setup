@@ -87,9 +87,10 @@ return {
 			-- gopls = {},
 			-- pyright = {},
 			-- rust_analyzer = {},
-			ts_ls = {},
-			denols = {},
+			-- ts_ls and denols are configured manually below to avoid conflicts
 			tailwindcss = {},
+			-- denols = {},
+			-- ts_ls = {},
 			lua_ls = {
 				Lua = {
 					workspace = { checkThirdParty = false },
@@ -108,89 +109,33 @@ return {
 		-- Ensure the servers above are installed
 		local mason_lspconfig = require 'mason-lspconfig'
 
-		-- Ensure only servers available in Mason are installed (denols is provided by the Deno binary)
-		local ensure_in_mason = vim.tbl_filter(function(name)
-			return name ~= 'denols'
-		end, vim.tbl_keys(servers))
-
 		mason_lspconfig.setup {
-			ensure_installed = ensure_in_mason,
-		}
-
-		-- Using the new vim.lsp.config API instead of deprecated require('lspconfig')
-		local util = require 'lspconfig.util'
-
-		-- Use mason to set up servers, with custom root_dir logic for Deno vs TypeScript
-		if type(mason_lspconfig.setup_handlers) == 'function' then
-			mason_lspconfig.setup_handlers {
+			ensure_installed = vim.tbl_keys(servers),
+			handlers = {
 				function(server_name)
-					if server_name == 'ts_ls' or server_name == 'denols' then
-						return
-					end
-					vim.lsp.config(server_name, {
+					require('lspconfig')[server_name].setup {
 						capabilities = capabilities,
 						on_attach = on_attach,
 						settings = servers[server_name],
-					})
+					}
 				end,
-				['denols'] = function()
-					vim.lsp.config('denols', {
-						capabilities = capabilities,
-						on_attach = on_attach,
-						root_dir = util.root_pattern('deno.json', 'deno.jsonc'),
-						init_options = { lint = true },
-						settings = servers.denols,
-					})
-				end,
-				['ts_ls'] = function()
-					vim.lsp.config('ts_ls', {
-						capabilities = capabilities,
-						on_attach = on_attach,
-						-- Disable TS in presence of a Deno project; otherwise use Node/TS roots
-						root_dir = function(fname)
-							if util.root_pattern('deno.json', 'deno.jsonc')(fname) then
-								return nil
-							end
-							return util.root_pattern('package.json', 'tsconfig.json',
-								'jsconfig.json')(fname)
-						end,
-						single_file_support = false,
-						settings = servers.ts_ls,
-					})
-				end,
-			}
-		else
-			-- Fallback for environments without setup_handlers
-			for server_name, server_settings in pairs(servers) do
-				if server_name ~= 'ts_ls' and server_name ~= 'denols' then
-					vim.lsp.config(server_name, {
-						capabilities = capabilities,
-						on_attach = on_attach,
-						settings = server_settings,
-					})
-				end
-			end
+			},
+		}
 
-			vim.lsp.config('denols', {
-				capabilities = capabilities,
-				on_attach = on_attach,
-				root_dir = util.root_pattern('deno.json', 'deno.jsonc'),
-				init_options = { lint = true },
-				settings = servers.denols,
-			})
+		-- Deno: only enable if deno.json or deno.jsonc exists
+		vim.lsp.config('denols', {
+			capabilities = capabilities,
+			root_markers = { 'deno.json', 'deno.jsonc' }
+		})
 
-			vim.lsp.config('ts_ls', {
-				capabilities = capabilities,
-				on_attach = on_attach,
-				root_dir = function(fname)
-					if util.root_pattern('deno.json', 'deno.jsonc')(fname) then
-						return nil
-					end
-					return util.root_pattern('package.json', 'tsconfig.json', 'jsconfig.json')(fname)
-				end,
-				single_file_support = false,
-				settings = servers.ts_ls,
-			})
-		end
+		-- TypeScript: only enable if package.json exists (and no deno.json)
+		vim.lsp.config('ts_ls', {
+			capabilities = capabilities,
+			root_markers = { 'package.json' },
+			single_file_support = false, -- disable for single files without package.json
+		})
+
+		-- Enable denols and ts_ls servers
+		vim.lsp.enable({ 'ts_ls' })
 	end,
 }

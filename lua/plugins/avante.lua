@@ -19,18 +19,18 @@ return {
 				throttle = 300, -- Time in milliseconds
 			},
 			rag_service = {
-				enabled = false,  -- Set to true to enable it
+				enabled = false, -- Set to true to enable it
 				host_mount = os.getenv("HOME") .. "/dev", -- Or adjust path as needed (e.g., "/")
 				runner = "docker",
 				-- For OpenAI:
-				embed = {         -- Embedding model configuration for RAG service
+				embed = {    -- Embedding model configuration for RAG service
 					provider = "openai", -- Embedding provider
 					endpoint = "https://api.openai.com/v1", -- Embedding API endpoint
 					api_key = "_OPENAI_API_KEY", -- Environment variable name for the embedding API key
 					model = "text-embedding-3-small", -- Embedding model name
 					extra = nil, -- Additional configuration options for the embedding model
 				},
-				llm = {           -- Language Model (LLM) configuration for RAG service
+				llm = {      -- Language Model (LLM) configuration for RAG service
 					provider = "openai", -- LLM provider
 					endpoint = "https://api.openai.com/v1", -- LLM API endpoint
 					api_key = "_OPENAI_API_KEY", -- Environment variable name for the LLM API key
@@ -43,7 +43,7 @@ return {
 					__inherited_from = "openai", -- OpenRouter is OpenAI-compatible
 					endpoint = "https://openrouter.ai/api/v1",
 					api_key_name = "OPENROUTER_API_KEY", -- Environment variable name for your API key
-					model = "anthropic/claude-sonnet-4", -- Specify the model you want to use (e.g., "mistralai/mixtral-8x7b-instruct-v0.1")
+					model = "anthropic/claude-sonnet-4.5", -- Specify the model you want to use (e.g., "mistralai/mixtral-8x7b-instruct-v0.1")
 				},
 				gemini = {
 					model = "gemini-2.5-pro-exp-03-25",
