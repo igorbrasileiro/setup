@@ -104,17 +104,15 @@ return {
 		local capabilities = vim.lsp.protocol.make_client_capabilities()
 		capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
 
+		---@diagnostic disable-next-line: deprecated
 		local lspconfig = require 'lspconfig'
+		---@diagnostic disable-next-line: deprecated
 		local util = require 'lspconfig.util'
-
-		-- nvim-lspconfig renamed tsserver -> ts_ls in some versions; support both.
-		local ts_server = lspconfig.ts_ls and 'ts_ls' or 'tsserver'
 
 		-- Ensure the servers above are installed
 		local mason_lspconfig = require 'mason-lspconfig'
 
 		local ensure_installed = vim.tbl_keys(servers)
-		vim.list_extend(ensure_installed, { 'denols', ts_server })
 
 		mason_lspconfig.setup {
 			ensure_installed = ensure_installed,
@@ -125,28 +123,35 @@ return {
 						settings = servers[server_name],
 					}
 				end,
-				-- Deno: only enable if deno.json or deno.jsonc exists
-				denols = function()
-					lspconfig.denols.setup {
-						capabilities = capabilities,
-						root_dir = util.root_pattern('deno.json', 'deno.jsonc'),
-					}
-				end,
-				-- TypeScript/JavaScript: only enable if not a Deno project.
-				[ts_server] = function()
-					lspconfig[ts_server].setup {
-						capabilities = capabilities,
-						root_dir = function(fname)
-							local deno_root = util.root_pattern('deno.json', 'deno.jsonc')(fname)
-							if deno_root then
-								return nil
-							end
-							return util.root_pattern('package.json', 'tsconfig.json', 'jsconfig.json', '.git')(fname)
-						end,
-						single_file_support = false,
-					}
-				end,
 			},
+		}
+
+		-- TypeScript (ts_go): uses `tsgo` binary (https://github.com/microsoft/typescript-go)
+		-- Note: this is NOT managed by mason-lspconfig; you must have `tsgo` on your PATH.
+		local has_tsgo = vim.fn.executable 'tsgo' == 1
+		if not has_tsgo then
+			vim.notify(
+				'[LSP] ts_go: `tsgo` não encontrado no PATH. Instale typescript-go e deixe `tsgo` acessível.',
+				vim.log.levels.WARN
+			)
+			return
+		end
+
+		---@diagnostic disable-next-line: deprecated
+		local configs = require 'lspconfig.configs'
+		if not configs.ts_go then
+			configs.ts_go = {
+				default_config = {
+					cmd = { 'tsgo', 'lsp', '--stdio' },
+					filetypes = { 'javascript', 'javascriptreact', 'typescript', 'typescriptreact' },
+					root_dir = util.root_pattern('tsconfig.json', 'jsconfig.json', 'package.json', '.git'),
+					single_file_support = false,
+				},
+			}
+		end
+
+		lspconfig.ts_go.setup {
+			capabilities = capabilities,
 		}
 	end,
 }
