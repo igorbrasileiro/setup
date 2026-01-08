@@ -107,17 +107,22 @@ return {
 		local servers = {
 			-- clangd = {},
 			-- gopls = {},
-			-- pyright = {},
 			-- rust_analyzer = {},
 			-- TypeScript and Deno are configured below to avoid conflicts
 			biome = {},
+			tsgo = {},
 			tailwindcss = {},
+			--
 			lua_ls = {
 				Lua = {
 					workspace = { checkThirdParty = false },
 					telemetry = { enable = false },
 				},
 			},
+			-- python
+			pyright = {},
+			ruff = {},
+			ty = {}
 		}
 
 		-- Setup neovim lua configuration
