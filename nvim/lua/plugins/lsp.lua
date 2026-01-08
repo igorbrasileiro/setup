@@ -15,67 +15,67 @@ return {
 	},
 	config = function()
 		-- [[ Configure LSP ]]
-		--  This function gets run when an LSP connects to a particular buffer.
-		local on_attach = function(_, bufnr)
-			-- NOTE: Remember that lua is a real programming language, and as such it is possible
-			-- to define small helper and utility functions so you don't have to repeat yourself
-			-- many times.
-			--
-			-- In this case, we create a function that lets us more easily define mappings specific
-			-- for LSP related items. It sets the mode, buffer and description for us each time.
-			local nmap = function(keys, func, desc)
-				if desc then
-					desc = 'LSP: ' .. desc
+		-- Keymaps: create them on LspAttach so they only exist when an LSP is actually attached.
+		vim.api.nvim_create_autocmd('LspAttach', {
+			group = vim.api.nvim_create_augroup('UserLspKeymaps', { clear = true }),
+			callback = function(event)
+				local bufnr = event.buf
+				local nmap = function(keys, func, desc)
+					if desc then
+						desc = 'LSP: ' .. desc
+					end
+					vim.keymap.set('n', keys, func, { buffer = bufnr, desc = desc })
 				end
 
-				vim.keymap.set('n', keys, func, { buffer = bufnr, desc = desc })
-			end
+				nmap('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
+				nmap('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction')
 
-			nmap('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
-			nmap('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction')
+				nmap('gd', vim.lsp.buf.definition, '[G]oto [D]efinition')
+				nmap('gr', function()
+					local ok, telescope = pcall(require, 'telescope.builtin')
+					if ok then
+						telescope.lsp_references()
+					else
+						vim.lsp.buf.references()
+					end
+				end, '[G]oto [R]eferences')
+				nmap('gI', vim.lsp.buf.implementation, '[G]oto [I]mplementation')
+				nmap('<leader>D', vim.lsp.buf.type_definition, 'Type [D]efinition')
+				nmap('<leader>ds', function()
+					local ok, telescope = pcall(require, 'telescope.builtin')
+					if ok then
+						telescope.lsp_document_symbols()
+					else
+						vim.lsp.buf.document_symbol()
+					end
+				end, '[D]ocument [S]ymbols')
+				nmap('<leader>ws', function()
+					local ok, telescope = pcall(require, 'telescope.builtin')
+					if ok then
+						telescope.lsp_dynamic_workspace_symbols()
+					else
+						vim.lsp.buf.workspace_symbol()
+					end
+				end, '[W]orkspace [S]ymbols')
 
-			nmap('gd', vim.lsp.buf.definition, '[G]oto [D]efinition')
-			nmap('gr', function()
-				if pcall(require, 'telescope.builtin') then
-					require('telescope.builtin').lsp_references()
-				else
-					vim.lsp.buf.references()
-				end
-			end, '[G]oto [R]eferences')
-			nmap('gI', vim.lsp.buf.implementation, '[G]oto [I]mplementation')
-			nmap('<leader>D', vim.lsp.buf.type_definition, 'Type [D]efinition')
-			nmap('<leader>ds', function()
-				if pcall(require, 'telescope.builtin') then
-					require('telescope.builtin').lsp_document_symbols()
-				else
-					vim.lsp.buf.document_symbol()
-				end
-			end, '[D]ocument [S]ymbols')
-			nmap('<leader>ws', function()
-				if pcall(require, 'telescope.builtin') then
-					require('telescope.builtin').lsp_dynamic_workspace_symbols()
-				else
-					vim.lsp.buf.workspace_symbol()
-				end
-			end, '[W]orkspace [S]ymbols')
+				-- See `:help K` for why this keymap
+				nmap('K', vim.lsp.buf.hover, 'Hover Documentation')
+				nmap('<C-k>', vim.lsp.buf.signature_help, 'Signature Documentation')
 
-			-- See `:help K` for why this keymap
-			nmap('K', vim.lsp.buf.hover, 'Hover Documentation')
-			nmap('<C-k>', vim.lsp.buf.signature_help, 'Signature Documentation')
+				-- Lesser used LSP functionality
+				nmap('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
+				nmap('<leader>wa', vim.lsp.buf.add_workspace_folder, '[W]orkspace [A]dd Folder')
+				nmap('<leader>wr', vim.lsp.buf.remove_workspace_folder, '[W]orkspace [R]emove Folder')
+				nmap('<leader>wl', function()
+					print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+				end, '[W]orkspace [L]ist Folders')
 
-			-- Lesser used LSP functionality
-			nmap('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
-			nmap('<leader>wa', vim.lsp.buf.add_workspace_folder, '[W]orkspace [A]dd Folder')
-			nmap('<leader>wr', vim.lsp.buf.remove_workspace_folder, '[W]orkspace [R]emove Folder')
-			nmap('<leader>wl', function()
-				print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-			end, '[W]orkspace [L]ist Folders')
-
-			-- Create a command `:Format` local to the LSP buffer
-			vim.api.nvim_buf_create_user_command(bufnr, 'Format', function(_)
-				vim.lsp.buf.format()
-			end, { desc = 'Format current buffer with LSP' })
-		end
+				-- Create a command `:Format` local to the LSP buffer
+				vim.api.nvim_buf_create_user_command(bufnr, 'Format', function()
+					vim.lsp.buf.format { async = true }
+				end, { desc = 'Format current buffer with LSP' })
+			end,
+		})
 
 		-- Enable the following language servers
 		--  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
@@ -87,10 +87,8 @@ return {
 			-- gopls = {},
 			-- pyright = {},
 			-- rust_analyzer = {},
-			-- ts_ls and denols are configured manually below to avoid conflicts
+			-- TypeScript and Deno are configured below to avoid conflicts
 			tailwindcss = {},
-			-- denols = {},
-			-- ts_ls = {},
 			lua_ls = {
 				Lua = {
 					workspace = { checkThirdParty = false },
@@ -106,36 +104,49 @@ return {
 		local capabilities = vim.lsp.protocol.make_client_capabilities()
 		capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
 
+		local lspconfig = require 'lspconfig'
+		local util = require 'lspconfig.util'
+
+		-- nvim-lspconfig renamed tsserver -> ts_ls in some versions; support both.
+		local ts_server = lspconfig.ts_ls and 'ts_ls' or 'tsserver'
+
 		-- Ensure the servers above are installed
 		local mason_lspconfig = require 'mason-lspconfig'
 
+		local ensure_installed = vim.tbl_keys(servers)
+		vim.list_extend(ensure_installed, { 'denols', ts_server })
+
 		mason_lspconfig.setup {
-			ensure_installed = vim.tbl_keys(servers),
+			ensure_installed = ensure_installed,
 			handlers = {
 				function(server_name)
-					require('lspconfig')[server_name].setup {
+					lspconfig[server_name].setup {
 						capabilities = capabilities,
-						on_attach = on_attach,
 						settings = servers[server_name],
+					}
+				end,
+				-- Deno: only enable if deno.json or deno.jsonc exists
+				denols = function()
+					lspconfig.denols.setup {
+						capabilities = capabilities,
+						root_dir = util.root_pattern('deno.json', 'deno.jsonc'),
+					}
+				end,
+				-- TypeScript/JavaScript: only enable if not a Deno project.
+				[ts_server] = function()
+					lspconfig[ts_server].setup {
+						capabilities = capabilities,
+						root_dir = function(fname)
+							local deno_root = util.root_pattern('deno.json', 'deno.jsonc')(fname)
+							if deno_root then
+								return nil
+							end
+							return util.root_pattern('package.json', 'tsconfig.json', 'jsconfig.json', '.git')(fname)
+						end,
+						single_file_support = false,
 					}
 				end,
 			},
 		}
-
-		-- Deno: only enable if deno.json or deno.jsonc exists
-		vim.lsp.config('denols', {
-			capabilities = capabilities,
-			root_markers = { 'deno.json', 'deno.jsonc' }
-		})
-
-		-- TypeScript: only enable if package.json exists (and no deno.json)
-		vim.lsp.config('ts_ls', {
-			capabilities = capabilities,
-			root_markers = { 'package.json' },
-			single_file_support = false, -- disable for single files without package.json
-		})
-
-		-- Enable denols and ts_ls servers
-		vim.lsp.enable({ 'ts_ls' })
 	end,
 }
