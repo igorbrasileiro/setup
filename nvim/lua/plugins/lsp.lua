@@ -70,10 +70,32 @@ return {
 					print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
 				end, '[W]orkspace [L]ist Folders')
 
-				-- Create a command `:Format` local to the LSP buffer
-				vim.api.nvim_buf_create_user_command(bufnr, 'Format', function()
-					vim.lsp.buf.format { async = true }
-				end, { desc = 'Format current buffer with LSP' })
+				-- -- Create a command `:Format` local to the LSP buffer
+				-- vim.api.nvim_buf_create_user_command(bufnr, 'Format', function()
+				-- 	vim.lsp.buf.format { async = true }
+				-- end, { desc = 'Format current buffer with LSP' })
+
+				-- format biome
+				local client = vim.lsp.get_client_by_id(event.data.client_id)
+				if client.name == "biome" then
+					vim.api.nvim_create_autocmd("BufWritePre", {
+						group = vim.api.nvim_create_augroup("BiomeFixAll", { clear = true }),
+						callback = function()
+							vim.lsp.buf.code_action({
+								context = {
+									only = { "source.fixAll.biome" },
+									diagnostics = {},
+								},
+								apply = true,
+							})
+						end,
+					})
+				else
+					-- Create a command `:Format` local to the LSP buffer
+					vim.api.nvim_buf_create_user_command(bufnr, 'Format', function()
+						vim.lsp.buf.format { async = true }
+					end, { desc = 'Format current buffer with LSP' })
+				end
 			end,
 		})
 
@@ -88,6 +110,7 @@ return {
 			-- pyright = {},
 			-- rust_analyzer = {},
 			-- TypeScript and Deno are configured below to avoid conflicts
+			biome = {},
 			tailwindcss = {},
 			lua_ls = {
 				Lua = {
@@ -144,7 +167,8 @@ return {
 				default_config = {
 					cmd = { 'tsgo', 'lsp', '--stdio' },
 					filetypes = { 'javascript', 'javascriptreact', 'typescript', 'typescriptreact' },
-					root_dir = util.root_pattern('tsconfig.json', 'jsconfig.json', 'package.json', '.git'),
+					root_dir = util.root_pattern('tsconfig.json', 'jsconfig.json', 'package.json',
+						'.git'),
 					single_file_support = false,
 				},
 			}
