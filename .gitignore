@@ -1,1 +1,27 @@
+# Editor / OS
 *.swp
+.DS_Store
+
+# Secrets — never commit these
+.env
+.env.*
+!.env.example
+.zshrc.local
+*.local
+secrets/
+credentials/
+*.pem
+*.key
+id_rsa
+id_ed25519
+id_ed25519.pub
+
+# MCP / AI provider configs with credentials
+mcphub/servers.json
+
+# Cursor / IDE local state (may contain tokens)
+.cursor/
+**/mcp-oauth-attempts/
+
+# Node
+node_modules/

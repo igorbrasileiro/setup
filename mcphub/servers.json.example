@@ -33,9 +33,7 @@
       "args": [
         "mcp-server-fetch"
       ],
-      "disabled_tools": [
-        
-      ],
+      "disabled_tools": [],
       "command": "uvx",
       "disabled": false
     },

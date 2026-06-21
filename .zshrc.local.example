@@ -1,0 +1,24 @@
+# Machine-specific zsh overrides.
+# Copy to ~/.zshrc.local and customize. This file is NOT overwritten by setup.
+# NEVER commit ~/.zshrc.local — it is gitignored.
+
+# AI provider keys (use env var names expected by plugins)
+# export OPENROUTER_API_KEY="your-key-here"
+# export GROQ_API_KEY="your-key-here"
+# export DEEPSEEK_API_KEY="your-key-here"
+# export OPENAI_API_KEY="your-key-here"
+
+# Optional toolchains installed outside Homebrew
+# export PNPM_HOME="$HOME/Library/pnpm"
+# case ":$PATH:" in
+#   *":$PNPM_HOME:"*) ;;
+#   *) export PATH="$PNPM_HOME:$PATH" ;;
+# esac
+
+# export DENO_INSTALL="$HOME/.deno"
+# export PATH="$DENO_INSTALL/bin:$PATH"
+# export DENO_V8_FLAGS=--max-old-space-size=4096
+
+# . /opt/homebrew/opt/asdf/libexec/asdf.sh
+# export JAVA_HOME="/opt/homebrew/opt/openjdk"
+# export PATH="$JAVA_HOME/bin:$PATH"

@@ -1,51 +1,66 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-# Color bash text definition
-# https://stackoverflow.com/a/28938235
+set -euo pipefail
 
-NC='\033[0m' # No Color
-GREEN='\033[0;32m'  # Green
-RED='\033[0;31m'  # Red
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck source=lib/common.sh
+source "$SCRIPT_DIR/lib/common.sh"
 
-# Install brew
+usage() {
+  cat <<EOF
+Usage: $(basename "$0") [all|homebrew|zsh|nvim|ssh|git|cursor]
 
-echo -e "${GREEN}Installing Brew...${NC}"
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+Bootstrap a macOS development environment from this repository.
 
-# installing git
+Examples:
+  ./setup_mac.sh           # full setup
+  ./setup_mac.sh zsh       # only zsh/plugins/dotfiles
+  ./setup_mac.sh nvim      # only neovim
+EOF
+}
 
-echo -e "${GREEN}Installing Git using Brew...${NC}"
-brew install git
-brew install gh
+run_target() {
+  case "$1" in
+    homebrew) run_script "$REPO_ROOT/setup_homebrew.sh" ;;
+    zsh)      run_script "$REPO_ROOT/setup_zsh.sh" ;;
+    nvim)     run_script "$REPO_ROOT/setup_nvim.sh" ;;
+    ssh)      run_script "$REPO_ROOT/setup_ssh.sh" ;;
+    git)      run_script "$REPO_ROOT/setup_git.sh" ;;
+    cursor)   run_script "$REPO_ROOT/setup_cursor.sh" ;;
+    *)
+      log_error "Unknown target: $1"
+      usage
+      exit 1
+      ;;
+  esac
+}
 
-# Instal nvm
+main() {
+  ensure_macos
 
-echo -e "${GREEN}Installing nvm, node LTS and yarn...${NC}"
-brew install nvm
-nvm install --lts
-brew install yarn
-# curl -o- -L https://yarnpkg.com/install.sh | bash
+  local target="${1:-all}"
 
-# installing and setting up Oh My Zsh
-
-echo -e "${GREEN}Running setup_zsh.sh...${NC}"
-./setup_zsh.sh
-
-# installing and setting up vim
-
-
-if which yarn > /dev/null
-  then
-    echo -e "${GREEN}Running setup_vim.sh...${NC}"
-    ./setup_vim.sh
-  else
-    echo "${RED}Yarn not installed... Run ./setup_vim.sh manually${NC}"
+  if [[ "$target" == "-h" || "$target" == "--help" ]]; then
+    usage
+    exit 0
   fi
 
-# open download vscode
+  if [[ "$target" == "all" ]]; then
+  run_script "$REPO_ROOT/setup_homebrew.sh"
+  run_script "$REPO_ROOT/setup_zsh.sh"
+  run_script "$REPO_ROOT/setup_ssh.sh"
+  run_script "$REPO_ROOT/setup_git.sh"
+  run_script "$REPO_ROOT/setup_nvim.sh"
+  run_script "$REPO_ROOT/setup_cursor.sh"
+  else
+    run_target "$target"
+  fi
 
-# open https://code.visualstudio.com/docs/?dv=osx
+  log_success "Setup finished"
+  log_info "Run ./verify_setup.sh to validate your environment"
+  if [[ -d "$REPO_ROOT/.git" ]]; then
+    run_script "$REPO_ROOT/scripts/install-git-hooks.sh"
+  fi
+}
 
-# Instructions
-# - Install vscode
-# -- Open cmd+P > shell command install
+main "$@"

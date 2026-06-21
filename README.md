@@ -1,334 +1,367 @@
-# Modular Neovim Configuration
+# macOS Development Setup
 
-A modern, modular Neovim configuration built on the Kickstart.nvim foundation, organized for maintainability and ease of customization.
+Idempotent scripts and dotfiles to bootstrap a macOS machine for daily development. Covers the full stack: **Homebrew**, **zsh** (Oh My Zsh + zplug + powerlevel10k), **Neovim** (Lazy.nvim), **Git** with SSH commit signing, and **Cursor** settings.
 
-## 📁 Project Structure
+Designed to be safe to re-run — existing files are backed up with a timestamp before being overwritten.
+
+## Prerequisites
+
+- macOS (Apple Silicon or Intel)
+- Internet access
+- A terminal with `zsh` (macOS default)
+- Optional: [Cursor](https://cursor.com) installed for IDE settings sync
+
+## Quick Start
+
+### Fresh machine
+
+```bash
+git clone <repo-url> ~/dev/setup
+cd ~/dev/setup
+chmod +x setup_mac.sh verify_setup.sh setup_*.sh lib/common.sh
+
+./setup_mac.sh
+./verify_setup.sh
+```
+
+### Existing machine
+
+If you already have dotfiles, migrate secrets and machine-specific PATH entries first:
+
+```bash
+cd ~/dev/setup
+chmod +x setup_*.sh verify_setup.sh lib/common.sh
+
+# 1. Preserve secrets and per-machine config (never committed to git)
+cp .zshrc.local.example ~/.zshrc.local
+# Move API keys, pnpm, asdf, java, etc. from ~/.zshrc into ~/.zshrc.local
+
+# 2. Apply only what you need
+./setup_mac.sh zsh
+./setup_mac.sh git
+./setup_mac.sh cursor
+
+# 3. Validate
+./verify_setup.sh
+```
+
+After zsh setup, restart your terminal or run `source ~/.zshrc`.
+
+## What Gets Installed
+
+```mermaid
+flowchart LR
+  A[setup_mac.sh] --> B[setup_homebrew.sh]
+  A --> C[setup_zsh.sh]
+  A --> D[setup_ssh.sh]
+  A --> E[setup_git.sh]
+  A --> F[setup_nvim.sh]
+  A --> G[setup_cursor.sh]
+  B --> H[CLI tools + Node LTS]
+  C --> I[Shell + plugins + dotfiles]
+  D --> J[SSH key + GitHub config]
+  E --> K[Git identity + signing]
+  F --> L[Neovim config]
+  G --> M[Cursor settings]
+```
+
+| Step | Script | Installs / configures |
+|------|--------|---------------------|
+| 1 | `setup_homebrew.sh` | Homebrew, core CLI tools, nvm + Node LTS |
+| 2 | `setup_zsh.sh` | Oh My Zsh, zplug, nerd font, shell dotfiles |
+| 3 | `setup_ssh.sh` | `~/.ssh/id_ed25519`, GitHub SSH config, allowed signers |
+| 4 | `setup_git.sh` | Global git config, aliases, SSH commit signing |
+| 5 | `setup_nvim.sh` | Neovim dependencies + `~/.config/nvim` |
+| 6 | `setup_cursor.sh` | Cursor `settings.json` and `keybindings.json` |
+
+Run individual steps:
+
+```bash
+./setup_mac.sh homebrew
+./setup_mac.sh zsh
+./setup_mac.sh ssh
+./setup_mac.sh git
+./setup_mac.sh nvim
+./setup_mac.sh cursor
+```
+
+## Homebrew
+
+`setup_homebrew.sh` installs:
+
+**Formulae:** `git`, `gh`, `neovim`, `ripgrep`, `fd`, `fzf`, `nvm`, `yarn`, `node`
+
+**Casks:** `font-roboto-mono-nerd-font`
+
+It also writes Homebrew `shellenv` to `~/.zprofile` (supports both `/opt/homebrew` and `/usr/local`) and installs Node LTS via nvm.
+
+## Shell (zsh)
+
+### Stack
+
+| Layer | Tool | Purpose |
+|-------|------|---------|
+| Framework | [Oh My Zsh](https://ohmyzsh.sh/) | Base shell framework |
+| Plugin manager | [zplug](https://github.com/zplug/zplug) | Plugin and theme loading |
+| Theme | [powerlevel10k](https://github.com/romkatv/powerlevel10k) | Prompt (configured in `.p10k.zsh`) |
+| Plugins | enhancd, fzf, zsh-syntax-highlighting | Directory jump, fuzzy find, highlighting |
+
+### Dotfiles
+
+| Repo file | Installed to | Notes |
+|-----------|--------------|-------|
+| `.zprofile` | `~/.zprofile` | Homebrew PATH |
+| `.zshrc` | `~/.zshrc` | Main shell config |
+| `.p10k.zsh` | `~/.p10k.zsh` | Prompt theme |
+| `.bash_aliases` | `~/.bash_aliases` | Shared aliases |
+| `.zshrc.local.example` | `~/.zshrc.local` | Created once; never overwritten |
+
+### Machine-specific config
+
+Put secrets and per-machine overrides in `~/.zshrc.local` — API keys, pnpm, asdf, Java, extra PATH entries, etc. This file is gitignored and never touched by setup scripts.
+
+```bash
+cp .zshrc.local.example ~/.zshrc.local
+$EDITOR ~/.zshrc.local
+```
+
+### Terminal font
+
+After setup, set your terminal font to **RobotoMono Nerd Font** (iTerm2 → Profiles → Text → Font).
+
+## Neovim
+
+Modular [Lazy.nvim](https://github.com/folke/lazy.nvim) config based on Kickstart.nvim.
+
+### Structure
 
 ```
-├── init.lua                     # Main entry point
+nvim/
+├── init.lua
 └── lua/
-    ├── config/                  # Core configuration modules
-    │   ├── options.lua          # Vim options and settings
-    │   ├── keymaps.lua          # Key mappings
-    │   └── autocmds.lua         # Autocommands
-    └── plugins/                 # Plugin configurations
-        ├── avante.lua           # AI-powered coding assistant
-        ├── colorscheme.lua      # OneDark theme
-        ├── completion.lua       # nvim-cmp autocompletion
-        ├── editor.lua           # Editor utilities
-        ├── git.lua              # Git integration
-        ├── lsp.lua              # Language Server Protocol
-        ├── mcphub.lua           # Model Context Protocol
-        ├── telescope.lua        # Fuzzy finder
-        ├── treesitter.lua       # Syntax highlighting
-        └── ui.lua               # User interface enhancements
+    ├── config/          # options, keymaps, autocmds
+    └── plugins/         # one file per plugin group
+        ├── lsp.lua
+        ├── completion.lua
+        ├── telescope.lua
+        ├── treesitter.lua
+        ├── git.lua
+        ├── avante.lua
+        └── ...
 ```
 
-## 🚀 Quick Start
+### After setup
 
-### Prerequisites
+```vim
+:Lazy sync      " install / update plugins
+:checkhealth    " verify everything works
+:Mason          " install language servers
+```
 
-- **Neovim** >= 0.9.0
-- **Git** for plugin management
-- **Node.js** and **npm** for some plugins
-- **Make** for compiling native extensions
-- **A Nerd Font** (optional, for icons)
+### Key bindings
 
-### Installation
+Leader key is `<Space>`.
 
-1. **Backup your existing configuration:**
-   ```bash
-   mv ~/.config/nvim ~/.config/nvim.backup
-   ```
-
-2. **Clone this configuration:**
-   ```bash
-   git clone <your-repo-url> ~/.config/nvim
-   ```
-
-3. **Start Neovim:**
-   ```bash
-   nvim
-   ```
-   
-   Lazy.nvim will automatically install all plugins on first launch.
-
-4. **Install language servers:**
-   ```
-   :Mason
-   ```
-   Use Mason to install additional language servers as needed.
-
-## 🛠️ Configuration Modules
-
-### Core Configuration (`lua/config/`)
-
-#### `options.lua`
-- **Leader Keys**: `<Space>` as leader and local leader
-- **Search**: Smart case-insensitive search, no highlight
-- **UI**: Line numbers, sign column, true color support
-- **Editing**: Smart indentation, persistent undo, clipboard sync
-- **Performance**: Fast update times, optimized timeouts
-
-#### `keymaps.lua`
-- **Navigation**: Smart j/k movement respecting wrapped lines
-- **Diagnostics**: `[d`/`]d` for navigation, `<leader>e` for float
-- **Telescope**: Comprehensive fuzzy finding shortcuts
-  - `<leader>sf` - Search files
-  - `<leader>sg` - Live grep
-  - `<leader>?` - Recent files
-  - `<leader><space>` - Buffers
-
-#### `autocmds.lua`
-- **Visual Feedback**: Highlight yanked text
-- **Code Quality**: Auto-format on save
-
-### Plugin Configurations (`lua/plugins/`)
-
-#### Language Support
-
-**LSP (`lsp.lua`)**
-- **Servers**: TypeScript, Deno, Lua, Tailwind CSS
-- **Smart Detection**: Automatic Deno vs Node.js project detection
-- **Key Features**: Go to definition, references, hover, rename
-- **Auto-installation**: Mason manages server installations
-
-**Completion (`completion.lua`)**
-- **Sources**: LSP, snippets, buffer text
-- **Smart Navigation**: Tab/Shift-Tab for completion and snippets
-- **VS Code Snippets**: Automatic loading support
-
-**Treesitter (`treesitter.lua`)**
-- **Languages**: C, C++, Go, Lua, Python, Rust, TypeScript, TSX
-- **Features**: Syntax highlighting, smart indentation, text objects
-- **Navigation**: Function/class movement, incremental selection
-
-#### Development Tools
-
-**Telescope (`telescope.lua`)**
-- **Fuzzy Finding**: Files, buffers, help, live grep
-- **Performance**: FZF native algorithm for speed
-- **Integration**: LSP symbols, diagnostics, Git files
-
-**Git (`git.lua`)**
-- **Fugitive**: Complete Git workflow integration
-- **GitSigns**: Visual diff indicators in gutter
-- **Navigation**: Hunk jumping and preview
-
-#### AI & Modern Features
-
-**Avante (`avante.lua`)**
-- **AI Providers**: OpenRouter, Gemini, Groq, DeepSeek
-- **Mode**: Agentic AI for autonomous task execution
-- **Integration**: MCPHub for enhanced tool access
-- **Features**: Code generation, refactoring, explanations
-
-**MCPHub (`mcphub.lua`)**
-- **Protocol**: Model Context Protocol for AI tool integration
-- **Auto-approval**: Streamlined server connections
-- **Extensibility**: Support for additional MCP servers
-
-#### User Interface
-
-**UI (`ui.lua`)**
-- **Status Line**: Lualine with OneDark theme
-- **Indentation**: Visual guides for code structure
-- **Help**: Which-key for command discovery
-
-**Theme (`colorscheme.lua`)**
-- **OneDark**: Modern, eye-friendly dark theme
-- **Priority Loading**: Ensures theme loads before other plugins
-
-**Editor (`editor.lua`)**
-- **Smart Indentation**: Automatic detection via vim-sleuth
-- **Commenting**: Intelligent commenting with `gc`
-
-## ⌨️ Key Bindings
-
-### Leader Key: `<Space>`
-
-#### File & Buffer Management
 | Key | Action |
 |-----|--------|
 | `<leader>sf` | Search files |
 | `<leader>sg` | Live grep |
 | `<leader>?` | Recent files |
 | `<leader><space>` | Switch buffers |
-| `<leader>/` | Search in current buffer |
-
-#### LSP & Code Navigation
-| Key | Action |
-|-----|--------|
 | `gd` | Go to definition |
 | `gr` | Go to references |
 | `K` | Hover documentation |
 | `<leader>rn` | Rename symbol |
 | `<leader>ca` | Code actions |
 | `<leader>e` | Show diagnostics |
+| `[d` / `]d` | Previous / next diagnostic |
 
-#### Git Operations
-| Key | Action |
-|-----|--------|
-| `<leader>gp` | Previous hunk |
-| `<leader>gn` | Next hunk |
-| `<leader>ph` | Preview hunk |
+### Link vs copy
 
-#### Diagnostics
-| Key | Action |
-|-----|--------|
-| `[d` | Previous diagnostic |
-| `]d` | Next diagnostic |
-| `<leader>q` | Diagnostic list |
+By default, `setup_nvim.sh` copies the config to `~/.config/nvim`. To symlink the repo instead (live edits):
 
-### Text Objects (Treesitter)
-| Key | Action |
-|-----|--------|
-| `af`/`if` | Function (outer/inner) |
-| `ac`/`ic` | Class (outer/inner) |
-| `aa`/`ia` | Argument (outer/inner) |
-
-### Comments
-| Key | Action |
-|-----|--------|
-| `gc` | Toggle line comment |
-| `gcc` | Comment current line |
-| `gbc` | Toggle block comment |
-
-## 🔧 Customization
-
-### Adding New Plugins
-
-1. Create a new file in `lua/plugins/` (e.g., `my-plugin.lua`)
-2. Return a plugin specification:
-   ```lua
-   return {
-     'author/plugin-name',
-     config = function()
-       -- Plugin configuration
-     end,
-   }
-   ```
-3. Restart Neovim - Lazy will auto-detect and install
-
-### Modifying Existing Configuration
-
-- **Options**: Edit `lua/config/options.lua`
-- **Keymaps**: Edit `lua/config/keymaps.lua`
-- **Plugin settings**: Edit the respective file in `lua/plugins/`
-
-### Language Server Setup
-
-1. Add server to `servers` table in `lua/plugins/lsp.lua`:
-   ```lua
-   local servers = {
-     -- existing servers...
-     your_server = {
-       -- server-specific settings
-     },
-   }
-   ```
-2. Install via Mason: `:Mason` then search and install
-
-## 🔌 AI Configuration
-
-### Setting Up AI Providers
-
-1. **OpenRouter** (Default):
-   ```bash
-   export OPENROUTER_API_KEY="your-key-here"
-   ```
-
-2. **Alternative Providers**:
-   ```bash
-   export GROQ_API_KEY="your-groq-key"
-   export DEEPSEEK_API_KEY="your-deepseek-key"
-   ```
-
-3. **Switch Provider**: Edit `provider` in `lua/plugins/avante.lua`
-
-### MCP Server Configuration
-
-Add servers in `lua/plugins/mcphub.lua`:
-```lua
-require("mcphub").setup({
-  auto_approve = true,
-  servers = {
-    your_server = {
-      enabled = true,
-      -- server-specific config
-    }
-  }
-})
-```
-
-## 🐛 Troubleshooting
-
-### Common Issues
-
-**Plugins not loading:**
-```
-:Lazy sync
-```
-
-**LSP not working:**
-```
-:Mason
-:LspInfo
-:checkhealth lsp
-```
-
-**Treesitter issues:**
-```
-:TSUpdate
-:checkhealth nvim-treesitter
-```
-
-**AI features not working:**
-- Check API keys are set in environment
-- Verify internet connection
-- Check `:checkhealth avante`
-
-### Health Checks
-
-Run comprehensive health checks:
-```
-:checkhealth
-```
-
-### Reset Configuration
-
-If issues persist:
 ```bash
-rm -rf ~/.local/share/nvim
-rm -rf ~/.local/state/nvim
+LINK_MODE=link ./setup_nvim.sh
 ```
-Then restart Neovim to reinstall everything.
 
-## 📚 Learning Resources
+### AI plugins
 
-- **Neovim**: `:help` and `:Tutor`
-- **Lua**: `:help lua-guide`
-- **Plugin Docs**: `:help <plugin-name>`
-- **Lazy.nvim**: `:help lazy.nvim`
-- **LSP**: `:help lsp`
+Avante.nvim reads API keys from environment variables — never hardcode them in Lua files. Set keys in `~/.zshrc.local`:
 
-## 🤝 Contributing
+```bash
+export OPENROUTER_API_KEY="your-key-here"
+export GROQ_API_KEY="your-key-here"
+```
 
-This configuration is designed to be:
-- **Readable**: Every line is documented
-- **Modular**: Easy to add/remove components
-- **Extensible**: Built for customization
+MCP server credentials go in `mcphub/servers.json` (local only, gitignored). Copy from the example:
 
-Feel free to:
-- Add new plugin configurations
-- Improve existing setups
-- Share useful keymaps or workflows
-- Report issues or suggest improvements
+```bash
+cp mcphub/servers.json.example mcphub/servers.json
+# edit mcphub/servers.json with your keys
+```
 
-## 📄 License
+## Git & SSH
 
-This configuration is based on Kickstart.nvim and maintains the same philosophy of being a starting point for your own configuration rather than a distribution.
+### SSH key and GitHub
 
----
+```bash
+./setup_ssh.sh
 
-**Happy coding with Neovim!** 🚀
+# Upload key to GitHub
+gh ssh-key add ~/.ssh/id_ed25519.pub -t "$(hostname)-$(date +%Y-%m-%d)"
+
+# Verify
+ssh -T git@github.com
+```
+
+`setup_ssh.sh` generates an ed25519 key if one doesn't exist, installs `ssh/config` for GitHub, adds the key to the macOS keychain, and creates `~/.ssh/allowed_signers` for commit signing.
+
+### Git config
+
+`setup_git.sh` configures:
+
+- `user.name` / `user.email` (override with `GIT_NAME` / `GIT_EMAIL` env vars)
+- `core.editor` → `nvim`
+- SSH commit signing (`gpg.format=ssh`, `commit.gpgsign=true`)
+
+### Aliases
+
+Defined in `.bash_aliases`:
+
+| Alias | Command |
+|-------|---------|
+| `gitfep` | `git fetch && git pull origin $(git branch --show-current)` |
+| `gpcb` | `git push origin $(git branch --show-current)` |
+| `git-prune-branches` | Prune remote-tracking branches and delete stale local branches |
+
+## Cursor
+
+`setup_cursor.sh` syncs editor settings from `cursor/` to:
+
+```
+~/Library/Application Support/Cursor/User/
+├── settings.json
+└── keybindings.json
+```
+
+Restart Cursor after running the script.
+
+## Verify
+
+```bash
+./verify_setup.sh
+```
+
+Checks 19 items: Homebrew, CLI tools, shell plugins, dotfiles, Neovim, SSH, Git config, Cursor settings, and GitHub SSH authentication. Exits with code 1 if anything fails.
+
+## Repository Layout
+
+```
+├── setup_mac.sh              # Main orchestrator
+├── setup_homebrew.sh
+├── setup_zsh.sh
+├── setup_nvim.sh
+├── setup_ssh.sh
+├── setup_git.sh
+├── setup_cursor.sh
+├── verify_setup.sh
+├── lib/common.sh             # Shared helpers (logging, backups, brew detection)
+├── .zshrc / .p10k.zsh        # Shell dotfiles
+├── .zprofile                 # Homebrew shellenv
+├── .zshrc.local.example      # Machine-specific overrides template
+├── .bash_aliases
+├── git-prune-local.sh        # Branch cleanup helper
+├── ssh/config                # GitHub SSH config
+├── cursor/                   # Cursor IDE settings
+└── nvim/                     # Neovim (Lazy.nvim) config
+```
+
+## Customization
+
+### Add a zsh plugin
+
+Edit `.zshrc` and add a `zplug` line, then re-run `./setup_zsh.sh`:
+
+```zsh
+zplug "zsh-users/zsh-autosuggestions"
+```
+
+### Add a Neovim plugin
+
+Create `nvim/lua/plugins/my-plugin.lua`:
+
+```lua
+return {
+  'author/plugin-name',
+  config = function()
+    -- plugin config
+  end,
+}
+```
+
+Restart Neovim — Lazy.nvim auto-detects new files.
+
+### Update dotfiles on a running machine
+
+Edit files in the repo, then re-run the relevant setup script. Backups are created automatically (e.g. `~/.zshrc.bak.20250621143000`).
+
+## Troubleshooting
+
+| Problem | Fix |
+|---------|-----|
+| `brew: command not found` after install | Open a new terminal or run `source ~/.zprofile` |
+| Prompt looks broken / missing icons | Set terminal font to RobotoMono Nerd Font |
+| `zplug: command not found` | Run `./setup_zsh.sh` |
+| Plugins not loading in Neovim | `:Lazy sync` then `:checkhealth` |
+| LSP not working | `:Mason` to install servers, then `:LspInfo` |
+| GitHub SSH fails | Run `./setup_ssh.sh`, then `gh ssh-key add ~/.ssh/id_ed25519.pub` |
+| Signed commits fail | Ensure `~/.ssh/allowed_signers` exists — run `./setup_ssh.sh` then `./setup_git.sh` |
+| API keys missing in Neovim | Add exports to `~/.zshrc.local`, restart terminal |
+
+### Reset Neovim plugin state
+
+```bash
+rm -rf ~/.local/share/nvim ~/.local/state/nvim
+nvim   # Lazy.nvim reinstalls everything
+```
+
+## Security
+
+This repo is designed so **API keys and tokens never get committed**.
+
+### Where secrets belong
+
+| Secret type | Location | Committed? |
+|-------------|----------|------------|
+| API keys (OpenRouter, Groq, etc.) | `~/.zshrc.local` | No — gitignored |
+| MCP server credentials | `mcphub/servers.json` | No — gitignored |
+| SSH private keys | `~/.ssh/` | No — never in repo |
+| Env files | `.env`, `.env.local` | No — gitignored |
+
+### Checks before committing
+
+```bash
+# Scan the repo for leaked secrets
+./scripts/check-secrets.sh
+
+# Install a pre-commit hook (also runs automatically via ./setup_mac.sh)
+./scripts/install-git-hooks.sh
+```
+
+The pre-commit hook blocks commits that match known key patterns (OpenAI `sk-proj-`, Groq `gsk_`, OpenRouter `sk-or-v1-`, GitHub tokens, AWS keys, private keys, etc.).
+
+### Rules
+
+1. Never put real API keys in `.zshrc`, Lua configs, JSON settings, or scripts
+2. Use `~/.zshrc.local` for all secrets — setup scripts never overwrite it
+3. Use `mcphub/servers.json.example` as a template; keep real values in `mcphub/servers.json` (gitignored)
+4. Run `./scripts/check-secrets.sh` before pushing if you edit config files
+
+## Legacy Scripts
+
+| Old script | Replaced by |
+|------------|-------------|
+| `setup_vim.sh` | `setup_nvim.sh` |
+| `git_setup.sh` | `setup_git.sh` |
+
+Both legacy scripts redirect to their replacements.

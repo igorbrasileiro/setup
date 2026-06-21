@@ -1,0 +1,16 @@
+{
+  "window.commandCenter": true,
+  "tailwindCSS.classFunctions": [
+    "cva"
+  ],
+  "workbench.colorTheme": "Dracula Theme Soft",
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "typescript.experimental.useTsgo": false,
+  "window.autoDetectColorScheme": false,
+  "[javascript]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode"
+  }
+}

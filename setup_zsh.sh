@@ -1,40 +1,67 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-# Defining colors
-NC='\033[0m' # No Color
-GREEN='\033[0;32m'  # Green
-RED='\033[0;31m'  # Red
+set -euo pipefail
 
-# Install oh my zsh
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck source=lib/common.sh
+source "$SCRIPT_DIR/lib/common.sh"
 
-echo -e "${GREEN}installing oh my zsh${NC}"
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+ensure_macos
+ensure_brew_in_path || {
+  log_error "Homebrew is required. Run ./setup_homebrew.sh first."
+  exit 1
+}
 
-# Install powerline font
-if which git > /dev/null
-  then
-    echo -e "${GREEN}Installing powerline fonts...${NC}"
-    git clone https://github.com/powerline/fonts.git
-    cd ./font
-    /bin/bash ./install.sh
-    cd ..
-  else
-    echo -e "${RED} Git not installed... install git and run again ./setup_zsh.sh${NC}"
+install_oh_my_zsh() {
+  if [[ -d "$HOME/.oh-my-zsh" ]]; then
+    log_success "Oh My Zsh already installed"
+    return 0
   fi
 
-# Clone powerlevel theme
-# git clone https://github.com/bhilburn/powerlevel9k.git ~/.oh-my-zsh/custom/themes/powerlevel9k
+  log_info "Installing Oh My Zsh"
+  RUNZSH=no CHSH=no KEEP_ZSHRC=yes \
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+}
 
-echo -e "${GREEN}Installing powerlevel10k zsh theme...${NC}"
-git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
+install_zplug() {
+  if [[ -f "$HOME/.zplug/init.zsh" ]]; then
+    log_success "zplug already installed"
+    return 0
+  fi
 
-# Installing autosuggestion
-# echo "installing zsh- autosuggestion"
+  log_info "Installing zplug"
+  curl -sSf --retry 3 --retry-delay 3 \
+    https://raw.githubusercontent.com/zplug/zplug/2.4.2/installer | zsh
+}
 
-# git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+install_nerd_font() {
+  if brew list --cask font-roboto-mono-nerd-font >/dev/null 2>&1; then
+    log_success "Nerd font already installed"
+    return 0
+  fi
 
-# Copy .zshrc
+  log_info "Installing Roboto Mono Nerd Font"
+  brew install --cask font-roboto-mono-nerd-font
+}
 
-echo -e "${GREEN} Copying zshrc and p10k.zsh to ~/.zshrc and ~/.p10k.zsh${NC}"
-cp .zshrc ~/.zshrc
-cp .p10k.zsh ~/.p10k.zsh
+install_dotfiles() {
+  install_file "$REPO_ROOT/.zprofile" "$HOME/.zprofile"
+  install_file "$REPO_ROOT/.zshrc" "$HOME/.zshrc"
+  install_file "$REPO_ROOT/.p10k.zsh" "$HOME/.p10k.zsh"
+  install_file "$REPO_ROOT/.bash_aliases" "$HOME/.bash_aliases"
+
+  if [[ ! -f "$HOME/.zshrc.local" ]] && [[ -f "$REPO_ROOT/.zshrc.local.example" ]]; then
+    cp "$REPO_ROOT/.zshrc.local.example" "$HOME/.zshrc.local"
+    log_warn "Created ~/.zshrc.local from example — add machine-specific secrets there"
+  fi
+}
+
+main() {
+  install_oh_my_zsh
+  install_zplug
+  install_nerd_font
+  install_dotfiles
+  log_success "Zsh setup complete — restart your terminal or run: source ~/.zshrc"
+}
+
+main "$@"
