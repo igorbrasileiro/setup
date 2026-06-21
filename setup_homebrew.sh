@@ -20,10 +20,6 @@ BREW_PACKAGES=(
   node
 )
 
-BREW_CASKS=(
-  font-roboto-mono-nerd-font
-)
-
 install_homebrew() {
   if command_exists brew || ensure_brew_in_path; then
     log_success "Homebrew already installed"
@@ -52,7 +48,6 @@ install_packages() {
   brew install "${BREW_PACKAGES[@]}"
 
   log_info "Installing Homebrew casks"
-  brew install --cask "${BREW_CASKS[@]}"
 }
 
 setup_nvm() {

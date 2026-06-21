@@ -26,7 +26,11 @@ if [[ -f "$HOME/.zplug/init.zsh" ]]; then
 fi
 
 # Powerlevel10k prompt
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+if [[ -f "$HOME/.p10k.zsh" ]]; then
+  source "$HOME/.p10k.zsh"
+elif [[ -f "$HOME/p10k.zsh" ]]; then
+  source "$HOME/p10k.zsh"
+fi
 POWERLEVEL9K_SHORTEN_STRATEGY="truncate_from_right"
 
 # nvm (Homebrew install path; setup_homebrew.sh also appends these lines)

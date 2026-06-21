@@ -36,7 +36,7 @@ main() {
   check "Oh My Zsh" '[[ -d "$HOME/.oh-my-zsh" ]]'
   check "zplug" '[[ -f "$HOME/.zplug/init.zsh" ]]'
   check "~/.zshrc" '[[ -f "$HOME/.zshrc" ]]'
-  check "~/.p10k.zsh" '[[ -f "$HOME/.p10k.zsh" ]]'
+  check "p10k config" '[[ -f "$HOME/.p10k.zsh" || -f "$HOME/p10k.zsh" ]]'
   check "Neovim config" '[[ -f "$HOME/.config/nvim/init.lua" ]]'
   check "SSH key" '[[ -f "$HOME/.ssh/id_ed25519" ]]'
   check "SSH config" '[[ -f "$HOME/.ssh/config" ]]'
