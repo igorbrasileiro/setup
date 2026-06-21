@@ -1,0 +1,24 @@
+{
+  "projects": [
+    {
+      "name": "talisman-web",
+      "path": "~/dev/talisman-web",
+      "source": "~/dev/talisman-web",
+      "files": [
+        ".vscode/settings.json",
+        ".cursor/hooks.json",
+        ".cursor/hooks/run-message-json-audits.mjs"
+      ]
+    },
+    {
+      "name": "talisman",
+      "path": "~/dev/talisman",
+      "source": "~/dev/talisman",
+      "files": [
+        ".vscode/settings.json",
+        ".cursor/hooks.json",
+        ".cursor/mcp.json"
+      ]
+    }
+  ]
+}

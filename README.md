@@ -236,13 +236,23 @@ Defined in `.bash_aliases`:
 
 ## Cursor
 
-`setup_cursor.sh` syncs editor settings from `cursor/` to:
+`setup_cursor.sh` installs:
 
+1. **Global settings** — merged from your preferences + `talisman-web` formatter/oxc defaults (`cursor/settings.json`, `cursor/keybindings.json`)
+2. **Project settings** — workspace configs for Talisman repos:
+
+| Project | Path | Files synced |
+|---------|------|--------------|
+| talisman-web | `~/dev/talisman-web` | `.vscode/settings.json`, `.cursor/hooks.json`, hook scripts |
+| talisman | `~/dev/talisman` | `.vscode/settings.json`, `.cursor/hooks.json`, `.cursor/mcp.json` |
+
+```bash
+./setup_cursor.sh              # install from setup repo snapshots
+./setup_cursor.sh sync         # pull latest from ~/dev/talisman* then install
+./scripts/sync-cursor-from-projects.sh   # same as sync
 ```
-~/Library/Application Support/Cursor/User/
-├── settings.json
-└── keybindings.json
-```
+
+Snapshots live under `cursor/projects/<name>/`. Project-level `.cursor` skills and rules stay in each repo's git history — only settings, hooks, and MCP config are managed here.
 
 Restart Cursor after running the script.
 
@@ -272,7 +282,11 @@ Checks 19 items: Homebrew, CLI tools, shell plugins, dotfiles, Neovim, SSH, Git 
 ├── .bash_aliases
 ├── git-prune-local.sh        # Branch cleanup helper
 ├── ssh/config                # GitHub SSH config
-├── cursor/                   # Cursor IDE settings
+├── cursor/                   # Global + project Cursor snapshots
+│   ├── settings.json
+│   ├── keybindings.json
+│   ├── projects.json
+│   └── projects/{talisman,talisman-web}/
 └── nvim/                     # Neovim (Lazy.nvim) config
 ```
 

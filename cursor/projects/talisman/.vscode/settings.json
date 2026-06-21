@@ -1,0 +1,55 @@
+{
+  "astGrep.configPath": "ast-grep/config.yml",
+  "editor.codeActionsOnSave": {
+    "source.fixAll": "never"
+  },
+  "files.associations": {
+    "**/BUILD": "python"
+  },
+  "files.exclude": {
+    ".cache/": true,
+    ".cursor/": false,
+    ".mypy_cache/": true,
+    ".github/": false,
+    ".sandboxes/": true,
+    "dist/": true,
+    ".pytest_cache/": true,
+    ".pants.d/": true,
+    ".python-version": true,
+    ".sandbox/": true,
+    ".vscode/settings.json": true,
+    "**/__pycache__/**/*": true
+  },
+  "search.exclude": {
+    ".pants.d/**/*": true,
+    "**/__pycache__/**/*": true,
+    "**/*.lock": true,
+    "**/node_modules/**/*": true,
+    "**/dist/**/*": true,
+    "**/venv/**/*": true
+  },
+  "terminal.integrated.env.linux": {
+    "PYTHONPATH": "${workspaceFolder}/src;${workspaceFolder}/tests;${workspaceFolder}/generated/python;${env:PYTHONPATH}"
+  },
+  "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python",
+  "python.analysis.autoSearchPaths": true,
+  "python.analysis.importFormat": "absolute",
+  "python.analysis.typeCheckingMode": "basic",
+  "python.analysis.extraPaths": [
+    "${workspaceFolder}/.venv/lib/python3.14/site-packages",
+    "${workspaceFolder}/generated/python",
+    "${workspaceFolder}/src",
+    "${workspaceFolder}/tests"
+  ],
+  "python.autoComplete.extraPaths": [
+    "${workspaceFolder}/generated/python",
+    "${workspaceFolder}/src",
+    "${workspaceFolder}/tests"
+  ],
+  "gopls": {
+    "build.buildFlags": ["-tags=pdfium"]
+},
+"files.watcherExclude": {
+    "**/target": true
+}
+}
