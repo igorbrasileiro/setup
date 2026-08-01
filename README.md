@@ -57,12 +57,14 @@ flowchart LR
   A --> E[setup_git.sh]
   A --> F[setup_nvim.sh]
   A --> G[setup_cursor.sh]
+  A --> N[setup_cursor_cli.sh]
   B --> H[CLI tools + Node LTS]
   C --> I[Shell + plugins + dotfiles]
   D --> J[SSH key + GitHub config]
   E --> K[Git identity + signing]
   F --> L[Neovim config]
   G --> M[Cursor settings]
+  N --> O[Cursor Agent CLI]
 ```
 
 | Step | Script | Installs / configures |
@@ -73,6 +75,7 @@ flowchart LR
 | 4 | `setup_git.sh` | Global git config, aliases, SSH commit signing |
 | 5 | `setup_nvim.sh` | Neovim dependencies + `~/.config/nvim` |
 | 6 | `setup_cursor.sh` | Cursor `settings.json` and `keybindings.json` |
+| 7 | `setup_cursor_cli.sh` | Official Cursor Agent CLI (`agent`) for ACP |
 
 Run individual steps:
 
@@ -83,6 +86,7 @@ Run individual steps:
 ./setup_mac.sh git
 ./setup_mac.sh nvim
 ./setup_mac.sh cursor
+./setup_mac.sh cursor-cli
 ```
 
 ## Homebrew
@@ -256,13 +260,42 @@ Snapshots live under `cursor/projects/<name>/`. Project-level `.cursor` skills a
 
 Restart Cursor after running the script.
 
+### Cursor Agent CLI (ACP)
+
+The [Cursor Agent CLI](https://cursor.com/docs/cli/acp) provides `agent` for Agent Client Protocol (ACP) integrations (e.g. Neovim in a later setup brief). It is separate from the Cursor IDE app.
+
+**Install** (idempotent):
+
+```bash
+./setup_cursor_cli.sh
+# or as part of full setup:
+./setup_mac.sh cursor-cli
+```
+
+This runs the official installer (`curl https://cursor.com/install -fsS | bash`) and places the binary in `~/.local/bin/agent`. Ensure that directory is on your PATH — add to `~/.zshrc.local` if needed (see `.zshrc.local.example`).
+
+**Authenticate** (interactive, required once per machine):
+
+```bash
+agent login
+```
+
+Do not store Cursor auth tokens in this repo. After login, smoke-test:
+
+```bash
+command -v agent
+agent --help
+```
+
+ACP server entrypoint: `agent acp` (JSON-RPC over stdio). Docs: https://cursor.com/docs/cli/acp
+
 ## Verify
 
 ```bash
 ./verify_setup.sh
 ```
 
-Checks 19 items: Homebrew, CLI tools, shell plugins, dotfiles, Neovim, SSH, Git config, Cursor settings, and GitHub SSH authentication. Exits with code 1 if anything fails.
+Checks Homebrew, CLI tools, shell plugins, dotfiles, Neovim, SSH, Git config, Cursor settings, Cursor Agent CLI (`agent`), and GitHub SSH authentication. Exits with code 1 if anything fails.
 
 ## Repository Layout
 
@@ -274,6 +307,7 @@ Checks 19 items: Homebrew, CLI tools, shell plugins, dotfiles, Neovim, SSH, Git 
 ├── setup_ssh.sh
 ├── setup_git.sh
 ├── setup_cursor.sh
+├── setup_cursor_cli.sh
 ├── verify_setup.sh
 ├── lib/common.sh             # Shared helpers (logging, backups, brew detection)
 ├── .zshrc / .p10k.zsh        # Shell dotfiles

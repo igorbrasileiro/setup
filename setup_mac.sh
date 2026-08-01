@@ -8,7 +8,7 @@ source "$SCRIPT_DIR/lib/common.sh"
 
 usage() {
   cat <<EOF
-Usage: $(basename "$0") [all|homebrew|zsh|nvim|ssh|git|cursor]
+Usage: $(basename "$0") [all|homebrew|zsh|nvim|ssh|git|cursor|cursor-cli]
 
 Bootstrap a macOS development environment from this repository.
 
@@ -26,7 +26,8 @@ run_target() {
     nvim)     run_script "$REPO_ROOT/setup_nvim.sh" ;;
     ssh)      run_script "$REPO_ROOT/setup_ssh.sh" ;;
     git)      run_script "$REPO_ROOT/setup_git.sh" ;;
-    cursor)   run_script "$REPO_ROOT/setup_cursor.sh" ;;
+    cursor)      run_script "$REPO_ROOT/setup_cursor.sh" ;;
+    cursor-cli)  run_script "$REPO_ROOT/setup_cursor_cli.sh" ;;
     *)
       log_error "Unknown target: $1"
       usage
@@ -52,6 +53,7 @@ main() {
   run_script "$REPO_ROOT/setup_git.sh"
   run_script "$REPO_ROOT/setup_nvim.sh"
   run_script "$REPO_ROOT/setup_cursor.sh"
+  run_script "$REPO_ROOT/setup_cursor_cli.sh"
   else
     run_target "$target"
   fi

@@ -111,6 +111,7 @@ return {
 			-- TypeScript and Deno are configured below to avoid conflicts
 			biome = {},
 			tsgo = {},
+			oxlint = {},
 			tailwindcss = {},
 			--
 			lua_ls = {

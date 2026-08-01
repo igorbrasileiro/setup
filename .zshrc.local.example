@@ -8,6 +8,12 @@
 # export DEEPSEEK_API_KEY="your-key-here"
 # export OPENAI_API_KEY="your-key-here"
 
+# Cursor Agent CLI (installed by setup_cursor_cli.sh into ~/.local/bin)
+# case ":$PATH:" in
+#   *":$HOME/.local/bin:"*) ;;
+#   *) export PATH="$HOME/.local/bin:$PATH" ;;
+# esac
+
 # Optional toolchains installed outside Homebrew
 # export PNPM_HOME="$HOME/Library/pnpm"
 # case ":$PATH:" in

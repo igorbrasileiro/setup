@@ -43,6 +43,7 @@ main() {
   check "Git user.name" 'git config --global user.name >/dev/null'
   check "Git user.email" 'git config --global user.email >/dev/null'
   check "Cursor settings" '[[ -f "$HOME/Library/Application Support/Cursor/User/settings.json" ]]'
+  check "Cursor Agent CLI" 'command -v agent >/dev/null'
 
   if command_exists ssh; then
     local ssh_output
