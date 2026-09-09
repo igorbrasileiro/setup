@@ -9,9 +9,21 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 	pattern = '*',
 })
 
--- Format on save
+-- Format on save when an LSP client supports it.
 vim.api.nvim_create_autocmd("BufWritePre", {
-	callback = function()
-		vim.lsp.buf.format { async = false, options = { timeout_ms = 1000 } }
-	end
+	callback = function(args)
+		local bufnr = args.buf
+		local clients = vim.lsp.get_clients({ bufnr = bufnr })
+
+		for _, client in ipairs(clients) do
+			if client:supports_method('textDocument/formatting') then
+				vim.lsp.buf.format({
+					async = false,
+					bufnr = bufnr,
+					timeout_ms = 2000,
+				})
+				return
+			end
+		end
+	end,
 })

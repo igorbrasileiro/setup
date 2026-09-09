@@ -11,6 +11,11 @@ vim.o.hlsearch = false
 
 -- Make line numbers default
 vim.wo.number = true
+vim.wo.relativenumber = true
+
+-- Keep cursor away from the edges while scrolling
+vim.o.scrolloff = 8
+vim.o.sidescrolloff = 8
 
 -- Enable mouse mode
 vim.o.mouse = 'a'

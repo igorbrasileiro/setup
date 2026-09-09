@@ -8,11 +8,35 @@ return {
 		opts = {
 			-- add any opts here
 			-- for example
-			provider = "openrouter", -- Set the default provider to OpenRouter
+			-- Cursor Agent CLI via ACP only (no OpenRouter / HTTP LLM defaults)
+			provider = "cursor",
+			acp_providers = {
+				cursor = {
+					command = vim.fn.expand("~/.local/bin/agent"),
+					args = { "acp", "--model", "cursor-grok-4.5-medium" },
+					auth_method = "cursor_login",
+					env = {
+						HOME = os.getenv("HOME"),
+						PATH = os.getenv("PATH"),
+					},
+				},
+			},
 			mode = "agentic",
 			behaviour = {
-				auto_suggestions = true,
-				auto_suggestion_provider = "groq", -- Use Groq for faster auto-suggestions
+				-- Auto-suggestions need an HTTP provider; disabled while ACP-only
+				auto_suggestions = false,
+			},
+			selector = {
+				provider = "fzf_lua",
+			},
+			input = {
+				provider = "dressing",
+			},
+			mappings = {
+				ask = "<leader>aq",
+				files = {
+					add_current = "<leader>a.",
+				},
 			},
 			suggestion = {
 				debounce = 300, -- Time in milliseconds
@@ -38,42 +62,19 @@ return {
 					extra = nil, -- Additional configuration options for LLM
 				},
 			},
-			providers = {
-				openrouter = {
-					__inherited_from = "openai", -- OpenRouter is OpenAI-compatible
-					endpoint = "https://openrouter.ai/api/v1",
-					api_key_name = "OPENROUTER_API_KEY", -- Environment variable name for your API key
-					model = "anthropic/claude-sonnet-4.5", -- Specify the model you want to use (e.g., "mistralai/mixtral-8x7b-instruct-v0.1")
-				},
-				gemini = {
-					model = "gemini-2.5-pro-exp-03-25",
-					max_tokens = 65536,
-				},
-				groq = { -- define groq provider
-					__inherited_from = 'openai',
-					api_key_name = 'GROQ_API_KEY',
-					endpoint = 'https://api.groq.com/openai/v1/',
-					model = 'llama-3.3-70b-versatile',
-					-- max_tokens = 32768, -- remember to increase this value, otherwise it will stop generating halfway
-					-- max_tokens = 6000, -- remember to increase this value, otherwise it will stop generating halfway
-					extra_request_body = {
-						max_completion_tokens = 32768
-					}
-				},
-				deepseek = {
-					__inherited_from = "openai",
-					api_key_name = "DEEPSEEK_API_KEY",
-					endpoint = "https://api.deepseek.com",
-					model = "deepseek-ai/deepseek-r1",
-				}
-			},
-			vendors = {
-			},
+			-- HTTP providers removed — Cursor ACP is the only chat provider
+			providers = {},
+			vendors = {},
 
 			-- Improved MCPHub integration
 			system_prompt = function()
-				local hub = require("mcphub").get_hub_instance()
-				return hub:get_active_servers_prompt()
+				local ok, hub = pcall(function()
+					return require("mcphub").get_hub_instance()
+				end)
+				if ok and hub then
+					return hub:get_active_servers_prompt()
+				end
+				return ""
 			end,
 
 			-- Fix for custom tools to properly load MCPHub tools
@@ -93,14 +94,11 @@ return {
 			"nvim-lua/plenary.nvim",
 			"MunifTanjim/nui.nvim",
 			--- The below dependencies are optional,
-			"echasnovski/mini.pick", -- for file_selector provider mini.pick
-			"nvim-telescope/telescope.nvim", -- for file_selector provider telescope
 			"hrsh7th/nvim-cmp", -- autocompletion for avante commands and mentions
-			"ibhagwan/fzf-lua", -- for file_selector provider fzf
+			"ibhagwan/fzf-lua", -- for selector provider fzf_lua
 			"stevearc/dressing.nvim", -- for input provider dressing
 			"folke/snacks.nvim", -- for input provider snacks
 			"nvim-tree/nvim-web-devicons", -- or echasnovski/mini.icons
-			"zbirenbaum/copilot.lua", -- for providers='copilot'
 			{
 				-- support for image pasting
 				"HakonHarnes/img-clip.nvim",

@@ -28,5 +28,16 @@ return {
 	},
 
 	-- Useful plugin to show you pending keybinds.
-	{ 'folke/which-key.nvim', opts = {} },
+	{
+		'folke/which-key.nvim',
+		opts = {},
+		config = function(_, opts)
+			local wk = require('which-key')
+			wk.setup(opts)
+			wk.add({
+				{ '<leader>s', group = 'Search' },
+				{ '<leader>g', group = 'Git' },
+			})
+		end,
+	},
 }

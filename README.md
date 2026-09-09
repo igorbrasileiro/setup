@@ -147,7 +147,7 @@ nvim/
     └── plugins/         # one file per plugin group
         ├── lsp.lua
         ├── completion.lua
-        ├── telescope.lua
+        ├── fzf.lua
         ├── treesitter.lua
         ├── git.lua
         ├── avante.lua
@@ -168,8 +168,9 @@ Leader key is `<Space>`.
 
 | Key | Action |
 |-----|--------|
-| `<leader>sf` | Search files |
+| `<leader>sf` | Search files (fzf-lua) |
 | `<leader>sg` | Live grep |
+| `<leader>sr` | Resume last search |
 | `<leader>?` | Recent files |
 | `<leader><space>` | Switch buffers |
 | `gd` | Go to definition |
