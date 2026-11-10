@@ -11,6 +11,23 @@ Designed to be safe to re-run — existing files are backed up with a timestamp 
 - A terminal with `zsh` (macOS default)
 - Optional: [Cursor](https://cursor.com) installed for IDE settings sync
 
+## Agent skills
+
+Personal agent skills are versioned under `ai-skills/`. The tree includes the
+skills from `~/.agents/skills`, personal Codex skills from `~/.codex/skills`,
+and the `test-ui-work` skill with its read-only UI tester subagent. Codex's
+managed `.system` skills are not copied.
+
+The full setup installs links for skills that are not already present. To
+install or refresh the setup on its own, run:
+
+```bash
+./setup_mac.sh skills
+```
+
+If a same-named skill already exists locally, the installer leaves it in place
+and prints a message. It does not replace personal files.
+
 ## Quick Start
 
 ### Fresh machine

@@ -1,0 +1,26 @@
+{
+  "version": 3,
+  "skills": {
+    "i-have-adhd": {
+      "source": "ayghri/i-have-adhd",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/ayghri/i-have-adhd.git",
+      "skillPath": "skills/i-have-adhd/SKILL.md",
+      "skillFolderHash": "5f9aed51e473d34f38962ac270ada0b1e3ff2a4a",
+      "installedAt": "2026-07-30T12:21:06.782Z",
+      "updatedAt": "2026-07-30T12:21:06.782Z"
+    },
+    "find-skills": {
+      "source": "vercel-labs/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/vercel-labs/skills.git",
+      "skillPath": "skills/find-skills/SKILL.md",
+      "skillFolderHash": "76a98a285cb0434f3d39e1a873823556330e398b",
+      "installedAt": "2026-07-30T12:21:18.856Z",
+      "updatedAt": "2026-07-30T12:21:18.856Z"
+    }
+  },
+  "dismissed": {
+    "findSkillsPrompt": true
+  }
+}
